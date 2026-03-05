@@ -1,0 +1,5 @@
+jbang-wrapper/.jbang/**
+mariadb-data/**
+models/**
+
+.vscode
