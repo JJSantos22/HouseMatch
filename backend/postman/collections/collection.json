@@ -1,0 +1,27 @@
+{
+  "info": {
+    "_postman_id": "ff0538c8-89f9-44e8-8102-c040e384e9bd",
+    "name": "HouseMatch",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Test",
+      "id": "562f7803-81c0-46e6-a4e6-b19fe17e6927",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/test",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "test"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

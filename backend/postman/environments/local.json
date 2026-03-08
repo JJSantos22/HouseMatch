@@ -1,0 +1,13 @@
+{
+  "id": "030cf7ad-10a8-4508-bb0d-cf7dcb21fa28",
+  "name": "Local",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "",
+      "enabled": true,
+      "type": "default"
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

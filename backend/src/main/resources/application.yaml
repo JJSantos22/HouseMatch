@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: housematch
+  datasource:
+    url: jdbc:postgresql://db.<your-project-ref>.supabase.co:5432/postgres
+    username: postgres
+    password: <your-database-password>
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
