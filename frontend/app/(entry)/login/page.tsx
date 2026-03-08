@@ -24,7 +24,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Link from "next/link";
-import EntryLayout from "../_components/EntryLayout";
 
 export default function LoginPage() {
   const universities = [
@@ -44,7 +43,7 @@ export default function LoginPage() {
   );
 
   return (
-    <EntryLayout>
+    <>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Login</CardTitle>
@@ -112,6 +111,6 @@ export default function LoginPage() {
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
       </FieldDescription>
-    </EntryLayout>
+    </>
   );
 }

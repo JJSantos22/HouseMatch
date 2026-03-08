@@ -8,11 +8,10 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import EntryLayout from "../_components/EntryLayout";
 
 export default function LoginPage() {
   return (
-    <EntryLayout>
+    <>
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Signup</CardTitle>
@@ -55,6 +54,6 @@ export default function LoginPage() {
         By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
         and <a href="#">Privacy Policy</a>.
       </FieldDescription>
-    </EntryLayout>
+    </>
   );
 }
