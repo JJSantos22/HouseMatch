@@ -25,7 +25,7 @@ class ProfileServiceIntegrationTest {
         assertEquals(UserRole.student, response.role());
         assertEquals("University of Lisbon", response.university());
         assertNull(response.phone());
-        assertNull(response.email());
+        assertEquals("student@test.com", response.email());
     }
 
     @Test
@@ -37,6 +37,6 @@ class ProfileServiceIntegrationTest {
         assertEquals(UserRole.landlord, response.role());
         assertNull(response.university());
         assertEquals("+351912345678", response.phone());
-        assertEquals("jane@example.com", response.email());
+        assertEquals("landlord@test.com", response.email());
     }
 }

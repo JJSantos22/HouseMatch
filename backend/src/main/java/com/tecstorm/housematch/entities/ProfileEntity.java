@@ -8,14 +8,22 @@ import java.util.UUID;
 @Table(name = "profile")
 public class ProfileEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
+
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "password", nullable = false)
+    private String password;
 
     @Column(name = "name", nullable = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.NAMED_ENUM)
     private UserRole role;
 
     @Column(name = "created_at")
@@ -23,13 +31,15 @@ public class ProfileEntity {
 
     protected ProfileEntity() {}
 
-    public ProfileEntity(UUID id, String name, UserRole role) {
-        this.id = id;
+    public ProfileEntity(String email, String password, String name, UserRole role) {
+        this.email = email;
+        this.password = password;
         this.name = name;
         this.role = role;
     }
 
     public UUID getId() { return id; }
+    public String getEmail() { return email; }
     public String getName() { return name; }
     public UserRole getRole() { return role; }
 }

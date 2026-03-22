@@ -18,17 +18,12 @@ public class LandlordEntity {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "email")
-    private String email;
-
     protected LandlordEntity() {}
 
-    public LandlordEntity(ProfileEntity profile, String phone, String email) {
+    public LandlordEntity(ProfileEntity profile, String phone) {
         this.profile = profile;
         this.phone = phone;
-        this.email = email;
     }
 
     public String getPhone() { return phone; }
-    public String getEmail() { return email; }
 }

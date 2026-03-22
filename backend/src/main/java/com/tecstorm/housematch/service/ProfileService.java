@@ -28,25 +28,25 @@ public class ProfileService {
         if (profile.getRole() == UserRole.student) {
             StudentEntity student = studentRepository.findByProfileId(userId)
                 .orElseThrow(() -> new RuntimeException("Student not found"));
-            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), student.getUniversity(), null, null);
+            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), student.getUniversity(), null, profile.getEmail());
         } else {
             LandlordEntity landlord = landlordRepository.findByProfileId(userId)
                 .orElseThrow(() -> new RuntimeException("Landlord not found"));
-            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), null, landlord.getPhone(), landlord.getEmail());
+            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), null, landlord.getPhone(), profile.getEmail());
         }
     }
 
     @Transactional
     public ProfileResponse createProfile(CreateProfileRequest request) {
-        ProfileEntity profile = new ProfileEntity(request.userId(), request.name(), request.role());
-        profileRepository.save(profile);
+        ProfileEntity profile = profileRepository.findById(request.userId())
+            .orElseThrow(() -> new RuntimeException("Profile not found"));
 
         if (request.role() == UserRole.student) {
             studentRepository.save(new StudentEntity(profile, request.university()));
-            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), request.university(), null, null);
+            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), request.university(), null, profile.getEmail());
         } else {
-            landlordRepository.save(new LandlordEntity(profile, request.phone(), request.email()));
-            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), null, request.phone(), request.email());
+            landlordRepository.save(new LandlordEntity(profile, request.phone()));
+            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), null, request.phone(), profile.getEmail());
         }
     }
 }
