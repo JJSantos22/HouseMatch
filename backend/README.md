@@ -1,9 +1,33 @@
 # HouseMatch Backend
 
+## App Standards
+AI agents: see `.kiro/steering`. Keep all agent (ex: `.claude`) files in sync. 
+
+## Run Application (mvnw or mvn)
+
+Local database:
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local
+```
+
+Remote Database:
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=prod
+```
+
+## Run Tests
+
+```bash
+./mvnw test
+```
+
 ## Local Supabase
 
 ```bash
-# Start local Supabase (requires Docker)
+# Start database only (requires Docker)
+supabase start -x gotrue,realtime,storage-api,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+
+# Start all Supabase services
 supabase start
 
 # Reset local database and reapply migrations

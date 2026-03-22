@@ -33,5 +33,4 @@ build/
 .vscode/
 
 ##
-/.mvn/wrapper/maven-wrapper.properties
 /.env
