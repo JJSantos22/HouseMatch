@@ -18,7 +18,7 @@ public class ProfileEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -31,10 +31,9 @@ public class ProfileEntity {
 
     protected ProfileEntity() {}
 
-    public ProfileEntity(String email, String password, String name, UserRole role) {
+    public ProfileEntity(String email, String password, UserRole role) {
         this.email = email;
         this.password = password;
-        this.name = name;
         this.role = role;
     }
 
@@ -42,4 +41,6 @@ public class ProfileEntity {
     public String getEmail() { return email; }
     public String getName() { return name; }
     public UserRole getRole() { return role; }
+
+    public void setName(String name) { this.name = name; }
 }
