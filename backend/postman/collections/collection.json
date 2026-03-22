@@ -6,22 +6,39 @@
   },
   "item": [
     {
-      "name": "Test",
-      "id": "562f7803-81c0-46e6-a4e6-b19fe17e6927",
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{baseUrl}}/test",
-          "host": [
-            "{{baseUrl}}"
-          ],
-          "path": [
-            "test"
-          ]
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Create Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"name\": \"John Doe\",\n  \"role\": \"student\",\n  \"university\": \"University of Lisbon\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/profile/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "profile", "{{userId}}"]
+            }
+          }
         }
-      },
-      "response": []
+      ]
     }
   ]
 }

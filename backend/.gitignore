@@ -34,3 +34,4 @@ build/
 
 ##
 /.mvn/wrapper/maven-wrapper.properties
+/.env
