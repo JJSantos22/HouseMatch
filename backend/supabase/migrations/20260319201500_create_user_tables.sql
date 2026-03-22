@@ -4,7 +4,7 @@ CREATE TABLE profile (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
-  name TEXT NOT NULL,
+  name TEXT,
   role user_role NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now()
 );

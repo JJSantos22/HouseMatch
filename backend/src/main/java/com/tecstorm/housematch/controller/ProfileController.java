@@ -1,7 +1,7 @@
 package com.tecstorm.housematch.controller;
 
-import com.tecstorm.housematch.dto.ProfileResponse;
 import com.tecstorm.housematch.dto.CreateProfileRequest;
+import com.tecstorm.housematch.dto.ProfileResponse;
 import com.tecstorm.housematch.service.ProfileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +22,10 @@ public class ProfileController {
         return ResponseEntity.ok(profileService.getProfile(userId));
     }
 
-    @PostMapping
-    public ResponseEntity<ProfileResponse> createProfile(@RequestBody CreateProfileRequest request) {
-        return ResponseEntity.ok(profileService.createProfile(request));
+    @PutMapping
+    public ResponseEntity<ProfileResponse> updateProfile(
+            @RequestHeader("X-User-Id") UUID userId,
+            @RequestBody CreateProfileRequest request) {
+        return ResponseEntity.ok(profileService.updateProfile(userId, request));
     }
 }

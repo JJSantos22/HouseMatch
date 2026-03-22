@@ -6,10 +6,10 @@
   },
   "item": [
     {
-      "name": "Profile",
+      "name": "Auth",
       "item": [
         {
-          "name": "Create Profile",
+          "name": "Register Student",
           "request": {
             "method": "POST",
             "header": [
@@ -17,15 +17,38 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"name\": \"John Doe\",\n  \"role\": \"student\",\n  \"university\": \"University of Lisbon\"\n}"
+              "raw": "{\n  \"email\": \"student@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"student\"\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/profile",
+              "raw": "{{baseUrl}}/api/auth/register",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "profile"]
+              "path": ["api", "auth", "register"]
             }
           }
         },
+        {
+          "name": "Register Landlord",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"landlord@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"landlord\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
         {
           "name": "Get Profile",
           "request": {
@@ -35,6 +58,44 @@
               "raw": "{{baseUrl}}/api/profile/{{userId}}",
               "host": ["{{baseUrl}}"],
               "path": ["api", "profile", "{{userId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Student Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "X-User-Id", "value": "{{userId}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Student\",\n  \"university\": \"University of Lisbon\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Landlord Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"},
+              {"key": "X-User-Id", "value": "{{userId}}"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Landlord\",\n  \"phone\": \"+351912345678\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "profile"]
             }
           }
         }
