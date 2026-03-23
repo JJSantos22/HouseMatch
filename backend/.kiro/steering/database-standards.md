@@ -10,3 +10,4 @@
 - Getters and setters only when required
 - Use constructor over setters
 - Always use @Column
+- Prefer JOINs over multiple queries when fetching related data
