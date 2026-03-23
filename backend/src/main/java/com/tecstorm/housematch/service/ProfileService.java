@@ -1,6 +1,6 @@
 package com.tecstorm.housematch.service;
 
-import com.tecstorm.housematch.dto.CreateProfileRequest;
+import com.tecstorm.housematch.dto.UpdateProfileRequest;
 import com.tecstorm.housematch.dto.ProfileResponse;
 import com.tecstorm.housematch.entities.*;
 import com.tecstorm.housematch.repository.*;
@@ -12,13 +12,15 @@ import java.util.UUID;
 public class ProfileService {
 
     private final ProfileRepository profileRepository;
-    private final StudentRepository studentRepository;
-    private final LandlordRepository landlordRepository;
+    private final StudentService studentService;
+    private final LandlordService landlordService;
+    private final PersonalityTraitService personalityTraitService;
 
-    public ProfileService(ProfileRepository profileRepository, StudentRepository studentRepository, LandlordRepository landlordRepository) {
+    public ProfileService(ProfileRepository profileRepository, StudentService studentService, LandlordService landlordService, PersonalityTraitService personalityTraitService) {
         this.profileRepository = profileRepository;
-        this.studentRepository = studentRepository;
-        this.landlordRepository = landlordRepository;
+        this.studentService = studentService;
+        this.landlordService = landlordService;
+        this.personalityTraitService = personalityTraitService;
     }
 
     public ProfileResponse getProfile(UUID userId) {
@@ -26,18 +28,17 @@ public class ProfileService {
             .orElseThrow(() -> new RuntimeException("Profile not found"));
 
         if (profile.getRole() == UserRole.student) {
-            StudentEntity student = studentRepository.findByProfileId(userId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), student.getUniversity(), null, profile.getEmail());
+            var studentEntity = studentService.get(userId);
+            var traits = personalityTraitService.get(studentEntity.getId());
+            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), studentEntity.getUniversity(), null, profile.getEmail(), traits);
         } else {
-            LandlordEntity landlord = landlordRepository.findByProfileId(userId)
-                .orElseThrow(() -> new RuntimeException("Landlord not found"));
-            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), null, landlord.getPhone(), profile.getEmail());
+            var landlordEntity = landlordService.get(userId);
+            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), null, landlordEntity.getPhone(), profile.getEmail(), null);
         }
     }
 
     @Transactional
-    public ProfileResponse updateProfile(UUID userId, CreateProfileRequest request) {
+    public void updateProfile(UUID userId, UpdateProfileRequest request) {
         ProfileEntity profile = profileRepository.findById(userId)
             .orElseThrow(() -> new RuntimeException("Profile not found"));
 
@@ -45,17 +46,11 @@ public class ProfileService {
         profileRepository.save(profile);
 
         if (profile.getRole() == UserRole.student) {
-            StudentEntity student = studentRepository.findByProfileId(userId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-            student.setUniversity(request.university());
-            studentRepository.save(student);
-            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), student.getUniversity(), null, profile.getEmail());
+            var student = studentService.get(userId);
+            studentService.update(userId, request);
+            personalityTraitService.update(student.getId(), request);
         } else {
-            LandlordEntity landlord = landlordRepository.findByProfileId(userId)
-                .orElseThrow(() -> new RuntimeException("Landlord not found"));
-            landlord.setPhone(request.phone());
-            landlordRepository.save(landlord);
-            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), null, landlord.getPhone(), profile.getEmail());
+            landlordService.update(userId, request);
         }
     }
 }

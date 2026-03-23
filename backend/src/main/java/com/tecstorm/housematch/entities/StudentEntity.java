@@ -25,6 +25,7 @@ public class StudentEntity {
         this.university = university;
     }
 
+    public UUID getId() { return id; }
     public String getUniversity() { return university; }
     public void setUniversity(String university) { this.university = university; }
 }

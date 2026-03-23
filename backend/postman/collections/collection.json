@@ -10,10 +10,14 @@
       "item": [
         {
           "name": "Register Student",
+          "id": "60932c3a-0bbb-4a64-959e-4a5935822a4d",
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -21,17 +25,28 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Register Landlord",
+          "id": "233a379b-3ff8-45c9-8a73-ba82e2aba55f",
           "request": {
             "method": "POST",
             "header": [
-              {"key": "Content-Type", "value": "application/json"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -39,54 +54,94 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
             }
-          }
+          },
+          "response": []
         }
-      ]
+      ],
+      "id": "7ad6b371-cb71-4430-9a57-6c9ec3a4b55d"
     },
     {
       "name": "Profile",
       "item": [
         {
           "name": "Get Profile",
+          "id": "ae81925c-dbe7-4ea7-b29f-57b6c4d3c020",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/api/profile/{{userId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "profile", "{{userId}}"]
+              "raw": "{{baseUrl}}/api/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Update Student Profile",
+          "id": "7c8957d1-114c-45f7-af8d-6740c4c800f3",
           "request": {
             "method": "PUT",
             "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "X-User-Id", "value": "{{userId}}"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Student\",\n  \"university\": \"University of Lisbon\"\n}"
+              "raw": "{\n  \"name\": \"John Student\",\n  \"university\": \"University of Lisbon\",\n  \"schedule\": \"NIGHT_OWL\",\n  \"social\": \"EXTROVERT\",\n  \"cleanliness\": \"MODERATE\",\n  \"academic\": \"BALANCED\",\n  \"lifestyle\": \"ADVENTUROUS\",\n  \"priority\": \"ERASMUS_MODE\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/profile",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
-          }
+          },
+          "response": []
         },
         {
           "name": "Update Landlord Profile",
+          "id": "843d55e3-3c10-4f45-8ef3-aa036374c8e5",
           "request": {
             "method": "PUT",
             "header": [
-              {"key": "Content-Type", "value": "application/json"},
-              {"key": "X-User-Id", "value": "{{userId}}"}
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -94,12 +149,19 @@
             },
             "url": {
               "raw": "{{baseUrl}}/api/profile",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "profile"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "profile"
+              ]
             }
-          }
+          },
+          "response": []
         }
-      ]
+      ],
+      "id": "e088c48e-2e8e-411f-80ad-fe79f40f4e10"
     }
   ]
 }
