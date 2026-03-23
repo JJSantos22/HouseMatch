@@ -7,6 +7,12 @@
       "value": "",
       "enabled": true,
       "type": "default"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "enabled": true,
+      "type": "default"
     }
   ],
   "_postman_variable_scope": "environment"

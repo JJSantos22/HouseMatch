@@ -1,5 +1,11 @@
 # Backend Rules
 - Controllers: return and receive DTOs with @JsonProperty, update postman/collections/collection.json
+  - Environment vars: postman/environments/local.json
 - Services: prefer DTOs, entities OK if similar
 - Always use Record Classes
 - Repositories are only accessible by the respective service
+  - Ex: StudentService is the only one that can access the StudentRepository
+- X-User-Id header = current authenticated user
+- Only warning comments
+- Enum values: UPPER_SNAKE_CASE
+- When refactoring: delete unused methods and update dependent code

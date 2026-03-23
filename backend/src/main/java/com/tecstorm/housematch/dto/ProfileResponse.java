@@ -12,5 +12,6 @@ public record ProfileResponse(
     @JsonProperty("role") UserRole role,
     @JsonProperty("university") String university,
     @JsonProperty("phone") String phone,
-    @JsonProperty("email") String email
+    @JsonProperty("email") String email,
+    @JsonProperty("personality_traits") PersonalityTraitsResponse personalityTraits
 ) {}

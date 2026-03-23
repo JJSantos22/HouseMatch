@@ -1,6 +1,6 @@
 package com.tecstorm.housematch.controller;
 
-import com.tecstorm.housematch.dto.CreateProfileRequest;
+import com.tecstorm.housematch.dto.UpdateProfileRequest;
 import com.tecstorm.housematch.dto.ProfileResponse;
 import com.tecstorm.housematch.service.ProfileService;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +17,16 @@ public class ProfileController {
         this.profileService = profileService;
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<ProfileResponse> getProfile(@PathVariable UUID userId) {
+    @GetMapping
+    public ResponseEntity<ProfileResponse> getProfile(@RequestHeader("X-User-Id") UUID userId) {
         return ResponseEntity.ok(profileService.getProfile(userId));
     }
 
     @PutMapping
-    public ResponseEntity<ProfileResponse> updateProfile(
+    public ResponseEntity<Void> updateProfile(
             @RequestHeader("X-User-Id") UUID userId,
-            @RequestBody CreateProfileRequest request) {
-        return ResponseEntity.ok(profileService.updateProfile(userId, request));
+            @RequestBody UpdateProfileRequest request) {
+        profileService.updateProfile(userId, request);
+        return ResponseEntity.noContent().build();
     }
 }
