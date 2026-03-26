@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { UserCircle } from "lucide-react";
 import { Toaster } from "sonner";
+import { Button } from "@/components/ui/button";
 
 export default function StudentsLayout({
   children,
@@ -36,22 +37,23 @@ export default function StudentsLayout({
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-accent-foreground">
       {/* Top Bar */}
-      <header className="border-border bg-background sticky top-0 z-50 w-full border-b">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+      <header className="border-border bg-primary sticky top-0 z-50 w-full border-b">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 text-background">
           <Link href="/explore" className="text-xl font-bold">
             HouseMatch
           </Link>
           <nav className="flex items-center gap-4">
-            <Link
-              href="/profile"
-              className="hover:bg-accent hover:text-accent-foreground flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors"
-              title="View Profile"
-            >
-              <UserCircle className="size-5" />
-              <span className="hidden sm:inline">Profile</span>
-            </Link>
+            <Button asChild variant="ghost">
+              <Link
+                href="/profile"
+                title="View Profile"
+              >
+                <UserCircle className="size-5" />
+                <span className="hidden sm:inline">Profile</span>
+              </Link>
+            </Button>
           </nav>
         </div>
       </header>
