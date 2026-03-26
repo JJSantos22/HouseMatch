@@ -2,7 +2,7 @@
 
 import { FieldDescription } from "@/components/ui/field";
 import { useAuthStore } from "@/lib/auth/store";
-import { RoomsMap, type Room } from "./components/RoomsMap";
+import { RoomsMap, type Room } from "./_components/RoomsMap";
 
 // Static data for demonstration
 const DEMO_ROOMS: Room[] = [
