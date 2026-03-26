@@ -1,46 +1,67 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldDescription } from "@/components/ui/field";
 import { useAuthStore } from "@/lib/auth/store";
+import { RoomsMap, type Room } from "./_components/RoomsMap";
+
+// Static data for demonstration
+const DEMO_ROOMS: Room[] = [
+  {
+    id: "1",
+    price: 450,
+    score: 8.5,
+    latitude: 38.7223,
+    longitude: -9.1393,
+  },
+  {
+    id: "2",
+    price: 380,
+    score: 7.2,
+    latitude: 38.7369,
+    longitude: -9.1428,
+  },
+  {
+    id: "3",
+    price: 520,
+    score: 9.1,
+    latitude: 38.7169,
+    longitude: -9.1333,
+  },
+  {
+    id: "4",
+    price: 410,
+    score: 8.0,
+    latitude: 38.7282,
+    longitude: -9.1501,
+  },
+  {
+    id: "5",
+    price: 395,
+    score: 7.8,
+    latitude: 38.7156,
+    longitude: -9.1478,
+  },
+];
 
 export default function ExplorePage() {
-  const session = useAuthStore((state) => state.session);
   const isHydrated = useAuthStore((state) => state.isHydrated);
-  const logout = useAuthStore((state) => state.logout);
+
+  const handleSelectRoom = (id: string) => {
+    console.log("Room selected:", id);
+    // Functionality to be added later
+  };
 
   if (!isHydrated) {
     return (
-      <div className="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center p-6">
+      <div className="flex h-screen w-full items-center justify-center">
         <FieldDescription>Loading your session...</FieldDescription>
       </div>
     );
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-3xl items-center justify-center p-6">
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle>Explore</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            This is a filler explore page. You can now connect real listings and
-            recommendations here.
-          </p>
-
-          <div className="space-y-3">
-            <FieldDescription>
-              Logged in as <strong>{session?.email}</strong>
-            </FieldDescription>
-            <FieldDescription>User ID: {session?.userId}</FieldDescription>
-            <Button type="button" onClick={logout}>
-              Logout
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+    <main className="w-full flex-1 flex">
+      <RoomsMap rooms={DEMO_ROOMS} onSelectRoom={handleSelectRoom} />
     </main>
   );
 }

@@ -10,10 +10,12 @@ import {
 import { ApiError } from "@/lib/api/client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function ProfilePage() {
   const router = useRouter();
   const session = useAuthStore((state) => state.session);
+  const logout = useAuthStore((state) => state.logout);
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -65,11 +67,16 @@ export default function ProfilePage() {
 
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">My Profile</h1>
-        <p className="text-muted-foreground text-sm">
-          Logged in as <strong>{session?.email}</strong>
-        </p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">My Profile</h1>
+          <p className="text-muted-foreground text-sm">
+            Logged in as <strong>{session?.email}</strong>
+          </p>
+        </div>
+        <Button variant="destructive" onClick={logout}>
+          Logout
+        </Button>
       </div>
       <ProfileForm
         key={profileData ? "loaded" : "loading"}
