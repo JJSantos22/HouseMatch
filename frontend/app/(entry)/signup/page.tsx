@@ -51,7 +51,7 @@ export default function LoginPage() {
 
     try {
       await register({ email, password });
-      router.push("/explore");
+      router.push("/onboarding");
     } catch {
       // Error state is handled by the auth store.
     }
