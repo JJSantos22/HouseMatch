@@ -37,7 +37,7 @@ export default function StudentsLayout({
   }
 
   return (
-    <div className="min-h-screen bg-accent-foreground">
+    <div className="min-h-screen bg-accent-foreground flex flex-col">
       {/* Top Bar */}
       <header className="border-border bg-primary sticky top-0 z-50 w-full border-b">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 text-background">
