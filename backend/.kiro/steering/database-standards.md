@@ -1,4 +1,7 @@
-`
+---
+inclusion: always
+---
+
 ## DB Rules
 - Supabase (Postgres)
 - Supabase Documentation: https://supabase.com/docs
