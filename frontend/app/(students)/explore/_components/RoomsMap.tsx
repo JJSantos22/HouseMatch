@@ -5,14 +5,7 @@ import Map, { Marker, NavigationControl, MapRef } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-
-export interface SimpleHouse {
-  id: string;
-  price: number;
-  score: number;
-  latitude: number;
-  longitude: number;
-}
+import type { SimpleHouse } from "@/lib/api/houses";
 
 export interface MapPadding {
   top: number;
