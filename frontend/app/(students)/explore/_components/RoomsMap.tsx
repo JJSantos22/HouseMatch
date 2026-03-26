@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Map, { Marker, NavigationControl, MapRef } from "react-map-gl/maplibre";
+import Map, {
+  Marker,
+  NavigationControl,
+  MapRef,
+  AttributionControl,
+} from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -19,6 +24,7 @@ interface RoomsMapProps {
   selectedHouseId: string | null;
   onSelectHouse: (id: string) => void;
   padding?: MapPadding;
+  hideControls?: boolean;
 }
 
 export function RoomsMap({
@@ -26,18 +32,26 @@ export function RoomsMap({
   selectedHouseId,
   onSelectHouse,
   padding,
+  hideControls = false,
 }: RoomsMapProps) {
   const mapRef = useRef<MapRef>(null);
 
   // Center map when a house is selected
   useEffect(() => {
     if (selectedHouseId) {
+      console.log(padding);
       const house = houses.find((h) => h.id === selectedHouseId);
       if (house && mapRef.current) {
         mapRef.current.flyTo({
           center: [house.longitude, house.latitude],
           zoom: 14,
           duration: 1000,
+          padding: padding,
+        });
+      }
+    } else {
+      if (mapRef.current) {
+        mapRef.current.flyTo({
           padding: padding,
         });
       }
@@ -54,8 +68,10 @@ export function RoomsMap({
       }}
       style={{ width: "100%", height: "auto" }}
       mapStyle="/map-style.json"
+      attributionControl={false}
     >
-      <NavigationControl position="top-right" />
+      {!hideControls && <NavigationControl position="top-right" />}
+      {!hideControls && <AttributionControl position="bottom-left" />}
 
       {houses.map((house) => (
         <Marker

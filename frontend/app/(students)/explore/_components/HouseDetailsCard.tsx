@@ -36,6 +36,7 @@ import {
   BookOpen,
   Compass,
   Target,
+  ArrowDown,
 } from "lucide-react";
 import type { House } from "@/types/house";
 import {
@@ -71,6 +72,7 @@ interface HouseDetailsCardProps {
   onDiscard: () => void;
   onSkip: () => void;
   onMatch: () => void;
+  onExitSmartSuggestion?: () => void;
 }
 
 export function HouseDetailsCard({
@@ -78,6 +80,7 @@ export function HouseDetailsCard({
   onDiscard,
   onSkip,
   onMatch,
+  onExitSmartSuggestion,
 }: HouseDetailsCardProps) {
   return (
     <Card className="relative flex w-full max-h-[66vh] flex-col overflow-hidden shadow-lg md:max-h-[90vh] md:max-w-md pt-0">
@@ -216,6 +219,21 @@ export function HouseDetailsCard({
             </TooltipTrigger>
             <TooltipContent>Skip</TooltipContent>
           </Tooltip>
+
+          {onExitSmartSuggestion && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon-lg"
+                  onClick={onExitSmartSuggestion}
+                >
+                  <ArrowDown className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Exit Smart Suggestions</TooltipContent>
+            </Tooltip>
+          )}
 
           <Tooltip>
             <TooltipTrigger asChild>

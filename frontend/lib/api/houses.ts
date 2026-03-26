@@ -226,3 +226,15 @@ export async function getHouseDetails(id: string): Promise<House | null> {
 
   return MOCK_HOUSES.find((house) => house.id === id) ?? null;
 }
+
+/**
+ * Get smart suggestions - returns a curated list of house IDs
+ */
+export async function getSmartSuggestions(): Promise<string[]> {
+  // Simulate API delay
+  await new Promise((resolve) => setTimeout(resolve, 300));
+
+  // Return a curated list of house IDs based on user preferences
+  // For demo, returning IDs 1, 3, 5 (best match scores)
+  return ["1", "3", "5", "4", "2"];
+}

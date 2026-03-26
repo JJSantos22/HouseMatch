@@ -1,14 +1,17 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { toast } from "sonner";
 import { FieldDescription } from "@/components/ui/field";
 import { useAuthStore } from "@/lib/auth/store";
 import { RoomsMap, type MapPadding } from "./_components/RoomsMap";
 import { HouseDetailsCard } from "@/app/(students)/explore/_components/HouseDetailsCard";
+import { SmartSuggestionsButton } from "@/app/(students)/explore/_components/SmartSuggestionsButton";
 import type { House } from "@/types/house";
 import {
   getAllHouses,
   getHouseDetails,
+  getSmartSuggestions,
   type SimpleHouse,
 } from "@/lib/api/houses";
 
@@ -19,6 +22,11 @@ export default function ExplorePage() {
   const [houses, setHouses] = useState<SimpleHouse[]>([]);
   const [selectedHouse, setSelectedHouse] = useState<House | null>(null);
   const [isLoadingHouses, setIsLoadingHouses] = useState(true);
+  const [isSmartSuggestionMode, setIsSmartSuggestionMode] = useState(false);
+  const [smartSuggestions, setSmartSuggestions] = useState<string[]>([]);
+  const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0);
+  const [isLoadingSmartSuggestions, setIsLoadingSmartSuggestions] =
+    useState(false);
 
   // Fetch all houses on mount
   useEffect(() => {
@@ -50,7 +58,7 @@ export default function ExplorePage() {
         setSelectedHouse(data);
       } catch (error) {
         console.error("Failed to fetch house details:", error);
-      } 
+      }
     }
 
     fetchHouseDetails();
@@ -96,17 +104,74 @@ export default function ExplorePage() {
 
   const handleDiscard = (id: string) => {
     console.log("House discarded:", id);
-    setSelectedHouseId(null);
+    if (isSmartSuggestionMode) {
+      handleNextSuggestion();
+    } else {
+      setSelectedHouseId(null);
+    }
   };
 
   const handleSkip = (id: string) => {
     console.log("House skipped:", id);
-    setSelectedHouseId(null);
+    if (isSmartSuggestionMode) {
+      handleNextSuggestion();
+    } else {
+      setSelectedHouseId(null);
+    }
   };
 
   const handleMatch = (id: string) => {
     console.log("House matched:", id);
+    if (isSmartSuggestionMode) {
+      handleNextSuggestion();
+    } else {
+      setSelectedHouseId(null);
+    }
+  };
+
+  const handleNextSuggestion = () => {
+    const nextIndex = currentSuggestionIndex + 1;
+    if (nextIndex < smartSuggestions.length) {
+      setCurrentSuggestionIndex(nextIndex);
+      setSelectedHouseId(smartSuggestions[nextIndex]);
+    } else {
+      // All suggestions seen
+      setIsSmartSuggestionMode(false);
+      setSelectedHouseId(null);
+      setSmartSuggestions([]);
+      setCurrentSuggestionIndex(0);
+      toast.success("Smart suggestions complete", {
+        description:
+          "You've reviewed all suggested houses. Check back later for more suggestions!",
+      });
+    }
+  };
+
+  const handleStartSmartSuggestions = async () => {
+    try {
+      setIsLoadingSmartSuggestions(true);
+      const suggestions = await getSmartSuggestions();
+      if (suggestions.length > 0) {
+        setSmartSuggestions(suggestions);
+        setCurrentSuggestionIndex(0);
+        setSelectedHouseId(suggestions[0]);
+        setIsSmartSuggestionMode(true);
+      }
+    } catch (error) {
+      console.error("Failed to fetch smart suggestions:", error);
+      toast.error("Failed to load smart suggestions", {
+        description: "Please try again.",
+      });
+    } finally {
+      setIsLoadingSmartSuggestions(false);
+    }
+  };
+
+  const handleExitSmartSuggestions = () => {
+    setIsSmartSuggestionMode(false);
     setSelectedHouseId(null);
+    setSmartSuggestions([]);
+    setCurrentSuggestionIndex(0);
   };
 
   if (!isHydrated || isLoadingHouses) {
@@ -126,7 +191,17 @@ export default function ExplorePage() {
         selectedHouseId={selectedHouseId}
         onSelectHouse={setSelectedHouseId}
         padding={mapPadding}
+        hideControls={!!selectedHouseId}
       />
+
+      {/* Smart Suggestions Button */}
+      {!selectedHouseId && (
+        <SmartSuggestionsButton
+          onClick={handleStartSmartSuggestions}
+          isLoading={isLoadingSmartSuggestions}
+          isMobile={isMobile}
+        />
+      )}
 
       {/* House Details Card Overlay */}
       {selectedHouse && (
@@ -137,6 +212,9 @@ export default function ExplorePage() {
               onDiscard={() => handleDiscard(selectedHouse.id)}
               onSkip={() => handleSkip(selectedHouse.id)}
               onMatch={() => handleMatch(selectedHouse.id)}
+              onExitSmartSuggestion={
+                isSmartSuggestionMode ? handleExitSmartSuggestions : undefined
+              }
             />
           </div>
         </div>
