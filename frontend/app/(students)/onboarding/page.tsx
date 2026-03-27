@@ -52,7 +52,7 @@ export default function OnboardingPage() {
         title="Create Your Profile"
         description="Fill out your profile to get personalized roommate recommendations."
         onSuccess={handleSuccess}
-        successMessage="Welcome to HouseMatch! Redirecting to explore..."
+        successMessage="Onboarding complete, welcome to HouseMatch!"
       />
     </main>
   );
