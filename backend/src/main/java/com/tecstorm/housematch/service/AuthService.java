@@ -1,11 +1,12 @@
 package com.tecstorm.housematch.service;
 
-import com.tecstorm.housematch.dto.RegisterRequest;
-import com.tecstorm.housematch.dto.RegisterResponse;
+import com.tecstorm.housematch.dto.*;
 import com.tecstorm.housematch.entities.*;
 import com.tecstorm.housematch.repository.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthService {
@@ -36,5 +37,11 @@ public class AuthService {
         }
 
         return new RegisterResponse(saved.getId());
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        return profileRepository.findByEmailAndPassword(request.email(), request.password())
+            .map(profile -> new LoginResponse(profile.getId()))
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED));
     }
 }

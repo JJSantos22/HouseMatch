@@ -1,7 +1,6 @@
 package com.tecstorm.housematch.controller;
 
-import com.tecstorm.housematch.dto.RegisterRequest;
-import com.tecstorm.housematch.dto.RegisterResponse;
+import com.tecstorm.housematch.dto.*;
 import com.tecstorm.housematch.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +18,11 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.register(request));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 
 
