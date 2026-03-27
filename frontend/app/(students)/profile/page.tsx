@@ -11,6 +11,8 @@ import { ApiError } from "@/lib/api/client";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { ProfileHistory, HouseReview } from "./_components/ProfileHistory";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -19,6 +21,17 @@ export default function ProfilePage() {
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Mock data for house reviews
+  const [houseReviews, setHouseReviews] = useState<HouseReview[]>([
+    {
+      id: "1",
+      name: "Sunset Villa",
+      datesOfStay: "Sep 2024 - Feb 2025",
+      review: "Great location near campus with modern amenities. The roommates were friendly and the common areas were well-maintained.",
+      score: 4,
+    },
+  ]);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -65,6 +78,21 @@ export default function ProfilePage() {
     router.push("/explore");
   }
 
+  async function handleUpdateHouse(houseId: string, review: string, score: number) {
+    // Mock update function - replace with actual API call
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        setHouseReviews((prev) =>
+          prev.map((house) =>
+            house.id === houseId ? { ...house, review, score } : house
+          )
+        );
+        toast.success("House review updated successfully!");
+        resolve();
+      }, 500);
+    });
+  }
+
   return (
     <main className="mx-auto flex w-full max-w-3xl flex-col p-6">
       <div className="mb-6 flex items-center justify-between">
@@ -90,6 +118,13 @@ export default function ProfilePage() {
         successMessage="Profile updated successfully!"
         onSuccess={handleSuccess}
       />
+
+      <div className="mt-6">
+        <ProfileHistory
+          houses={houseReviews}
+          onUpdateHouse={handleUpdateHouse}
+        />
+      </div>
     </main>
   );
 }
