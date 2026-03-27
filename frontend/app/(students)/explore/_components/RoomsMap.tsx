@@ -9,8 +9,7 @@ import Map, {
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import type { SimpleHouse } from "@/lib/api/houses";
+import type { PropertyMapResponse } from "@/lib/api/property";
 
 export interface MapPadding {
   top: number;
@@ -20,30 +19,35 @@ export interface MapPadding {
 }
 
 interface RoomsMapProps {
-  houses: SimpleHouse[];
-  selectedHouseId: string | null;
-  onSelectHouse: (id: string) => void;
+  properties: PropertyMapResponse[];
+  selectedPropertyId: string | null;
+  onSelectProperty: (id: string) => void;
   padding?: MapPadding;
   hideControls?: boolean;
 }
 
+function getPriceRange(property: PropertyMapResponse): string {
+  const prices = property.bedrooms.map((b) => b.price);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  return min === max ? `${min}€` : `${min}€ - ${max}€`;
+}
+
 export function RoomsMap({
-  houses,
-  selectedHouseId,
-  onSelectHouse,
+  properties,
+  selectedPropertyId,
+  onSelectProperty,
   padding,
   hideControls = false,
 }: RoomsMapProps) {
   const mapRef = useRef<MapRef>(null);
 
-  // Center map when a house is selected
   useEffect(() => {
-    if (selectedHouseId) {
-      console.log(padding);
-      const house = houses.find((h) => h.id === selectedHouseId);
-      if (house && mapRef.current) {
+    if (selectedPropertyId) {
+      const property = properties.find((p) => p.id === selectedPropertyId);
+      if (property && mapRef.current) {
         mapRef.current.flyTo({
-          center: [house.longitude, house.latitude],
+          center: [property.lng, property.lat],
           zoom: 14,
           duration: 1000,
           padding: padding,
@@ -56,7 +60,7 @@ export function RoomsMap({
         });
       }
     }
-  }, [selectedHouseId, houses, padding]);
+  }, [selectedPropertyId, properties, padding]);
 
   return (
     <Map
@@ -73,24 +77,19 @@ export function RoomsMap({
       {!hideControls && <NavigationControl position="top-right" />}
       {!hideControls && <AttributionControl position="bottom-left" />}
 
-      {houses.map((house) => (
+      {properties.map((property) => (
         <Marker
-          key={house.id}
-          longitude={house.longitude}
-          latitude={house.latitude}
+          key={property.id}
+          longitude={property.lng}
+          latitude={property.lat}
           anchor="bottom"
-          onClick={() => onSelectHouse(house.id)}
+          onClick={() => onSelectProperty(property.id)}
         >
           <Badge
-            variant={selectedHouseId === house.id ? "default" : "secondary"}
-            className="shadow-sm"
-            asChild
+            variant={selectedPropertyId === property.id ? "default" : "secondary"}
+            className="shadow-sm cursor-pointer"
           >
-            <a>
-              {house.score}%
-              <Separator orientation="vertical" />
-              {house.price}€
-            </a>
+            {getPriceRange(property)}
           </Badge>
         </Marker>
       ))}

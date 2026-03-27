@@ -31,7 +31,7 @@ public class PropertyService {
                 p.getLat(),
                 p.getLng(),
                 p.getBedrooms().stream()
-                    .map(b -> new BedroomMapResponse(b.getId(), b.getPrice()))
+                    .map(b -> new BedroomMapResponse(b.getId(), b.getTitle(), b.getPrice()))
                     .toList()
             ))
             .toList();
