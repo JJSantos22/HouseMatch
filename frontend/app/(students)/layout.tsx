@@ -84,6 +84,9 @@ export default function StudentsLayout({
       {/* Global Toast Notifications */}
       <Toaster
         offset={showBottomNav ? { bottom: "calc(4rem + 32px)" } : undefined}
+        mobileOffset={
+          showBottomNav ? { bottom: "calc(4rem + 16px)" } : undefined
+        }
       />
     </div>
   );
