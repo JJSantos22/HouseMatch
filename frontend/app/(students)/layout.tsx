@@ -2,12 +2,12 @@
 
 import { FieldDescription } from "@/components/ui/field";
 import { useAuthStore } from "@/lib/auth/store";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
-import Link from "next/link";
-import { UserCircle } from "lucide-react";
 import { Toaster } from "sonner";
-import { Button } from "@/components/ui/button";
+import { TopBar } from "./_components/TopBar";
+import { BottomNav } from "./_components/BottomNav";
+import { Compass, Heart, Users, MessageCircle, UserCircle } from "lucide-react";
 
 export default function StudentsLayout({
   children,
@@ -15,6 +15,7 @@ export default function StudentsLayout({
   children: React.ReactNode;
 }>) {
   const router = useRouter();
+  const pathname = usePathname();
   const isHydrated = useAuthStore((state) => state.isHydrated);
   const session = useAuthStore((state) => state.session);
 
@@ -36,33 +37,54 @@ export default function StudentsLayout({
     );
   }
 
+  const bottomNavDestinations = [
+    {
+      displayName: "Explore",
+      onClick: () => router.push("/explore"),
+      active: pathname === "/explore",
+      icon: Compass,
+    },
+    {
+      displayName: "Favorites",
+      onClick: () => router.push("/favorites"),
+      active: pathname === "/favorites",
+      icon: Heart,
+    },
+    {
+      displayName: "Matches",
+      onClick: () => router.push("/matches"),
+      active: pathname === "/matches",
+      icon: Users,
+    },
+    {
+      displayName: "Messages",
+      onClick: () => router.push("/messages"),
+      active: pathname === "/messages",
+      icon: MessageCircle,
+    },
+    {
+      displayName: "Profile",
+      onClick: () => router.push("/profile"),
+      active: pathname === "/profile",
+      icon: UserCircle,
+    },
+  ];
+
+  const showBottomNav = bottomNavDestinations.some((dest) => dest.active);
+
   return (
-    <div className="min-h-screen bg-accent-foreground flex flex-col">
-      {/* Top Bar */}
-      <header className="border-border bg-primary sticky top-0 z-50 w-full border-b">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6 text-background">
-          <Link href="/explore" className="text-xl font-bold">
-            HouseMatch
-          </Link>
-          <nav className="flex items-center gap-4">
-            <Button asChild variant="ghost">
-              <Link
-                href="/profile"
-                title="View Profile"
-              >
-                <UserCircle className="size-5" />
-                <span className="hidden sm:inline">Profile</span>
-              </Link>
-            </Button>
-          </nav>
-        </div>
-      </header>
+    <div className="h-screen overflow-hidden bg-accent-foreground flex flex-col">
+      <TopBar />
 
       {/* Main Content */}
-      {children}
+      <main className="flex-1 overflow-auto">{children}</main>
+
+      {showBottomNav && <BottomNav destinations={bottomNavDestinations} />}
 
       {/* Global Toast Notifications */}
-      <Toaster />
+      <Toaster
+        offset={showBottomNav ? { bottom: "calc(4rem + 32px)" } : undefined}
+      />
     </div>
   );
 }

@@ -60,8 +60,8 @@ export default function ExplorePage() {
   }
 
   return (
-    <main className="w-full flex-1 flex">
+    <div className="w-full h-full flex-1 flex">
       <RoomsMap rooms={DEMO_ROOMS} onSelectRoom={handleSelectRoom} />
-    </main>
+    </div>
   );
 }
