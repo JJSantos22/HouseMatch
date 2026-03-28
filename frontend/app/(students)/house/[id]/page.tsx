@@ -7,22 +7,11 @@ import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import { toast } from "sonner";
 import {
-  Bath,
-  Bed,
-  Car,
   ChevronLeft,
   ChevronRight,
-  Clock3,
   Heart,
   MapPin,
-  Maximize2,
   SendHorizonal,
-  Sofa,
-  Users,
-  Utensils,
-  WashingMachine,
-  Wifi,
-  Wind,
 } from "lucide-react";
 import {
   getBedroomsByPropertyId,
@@ -30,7 +19,8 @@ import {
   type PropertyResponse,
 } from "@/lib/api/property";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { BedroomAmenityBadges } from "@/components/BedroomAmenityBadges";
+import { PropertyAmenityBadges } from "@/components/PropertyAmenityBadges";
 import {
   Card,
   CardContent,
@@ -62,12 +52,6 @@ type GalleryImage = {
   label: string;
 };
 
-const LAUNDRY_LABELS: Record<string, string> = {
-  BUILDING: "In Building",
-  HOUSE: "In House",
-  NONE: "None",
-};
-
 const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&h=900&fit=crop",
   "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=900&fit=crop",
@@ -77,10 +61,6 @@ const FALLBACK_IMAGES = [
 function formatDate(value: string) {
   const parsed = new Date(value);
   return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString();
-}
-
-function formatSqtToSqm(value: number) {
-  return Math.round(value * 0.0929);
 }
 
 function getMockReviews(
@@ -369,77 +349,7 @@ export default function HouseDetailsPage() {
                   : "Price on request"}
               </div>
 
-              <div className="flex flex-wrap gap-2">
-                <Badge
-                  variant="secondary"
-                  className="flex items-center gap-1.5 py-2"
-                >
-                  <Users className="h-4 w-4" />
-                  <span>{property.total_people} People</span>
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="flex items-center gap-1.5 py-2"
-                >
-                  <Bed className="h-4 w-4" />
-                  <span>{property.total_bedrooms} Bedrooms</span>
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="flex items-center gap-1.5 py-2"
-                >
-                  <Bath className="h-4 w-4" />
-                  <span>{property.total_bathrooms} Bathrooms</span>
-                </Badge>
-                <Badge
-                  variant="secondary"
-                  className="flex items-center gap-1.5 py-2"
-                >
-                  <Maximize2 className="h-4 w-4" />
-                  <span>{formatSqtToSqm(property.size_sqft)}m²</span>
-                </Badge>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                <Badge
-                  variant="outline"
-                  className="flex items-center gap-1.5 py-2"
-                >
-                  <Wifi className="h-4 w-4" />
-                  <span>WiFi: {property.wifi ? "Yes" : "No"}</span>
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="flex items-center gap-1.5 py-2"
-                >
-                  <Wind className="h-4 w-4" />
-                  <span>AC: {property.ac ? "Yes" : "No"}</span>
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="flex items-center gap-1.5 py-2"
-                >
-                  <Car className="h-4 w-4" />
-                  <span>Parking: {property.parking ? "Yes" : "No"}</span>
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="flex items-center gap-1.5 py-2"
-                >
-                  <Utensils className="h-4 w-4" />
-                  <span>Dishwasher: {property.dishwasher ? "Yes" : "No"}</span>
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="flex items-center gap-1.5 py-2"
-                >
-                  <WashingMachine className="h-4 w-4" />
-                  <span>
-                    Laundry:{" "}
-                    {LAUNDRY_LABELS[property.laundry] ?? property.laundry}
-                  </span>
-                </Badge>
-              </div>
+              <PropertyAmenityBadges property={property} showOverview />
             </CardContent>
           </Card>
         </section>
@@ -472,63 +382,7 @@ export default function HouseDetailsPage() {
                     </ItemDescription>
                   </ItemContent>
                   <ItemFooter className="items-start gap-2">
-                    <div className="flex flex-1 flex-wrap gap-0">
-                      <Badge
-                        variant="outline"
-                        className="flex items-center gap-1.5 py-2"
-                      >
-                        <Users className="h-4 w-4" />
-                        <span className="text-xs">
-                          {bedroom.total_people} People
-                        </span>
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="flex items-center gap-1.5 py-2"
-                      >
-                        <Bed className="h-4 w-4" />
-                        <span className="text-xs">
-                          {bedroom.total_beds} Bed
-                          {bedroom.total_beds > 1 ? "s" : ""}
-                        </span>
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="flex items-center gap-1.5 py-2"
-                      >
-                        <Bath className="h-4 w-4" />
-                        <span className="text-xs">
-                          {bedroom.private_bath ? "Private" : "Shared"}
-                        </span>
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="flex items-center gap-1.5 py-2"
-                      >
-                        <Maximize2 className="h-4 w-4" />
-                        <span className="text-xs">
-                          {formatSqtToSqm(bedroom.size_sqft)}m²
-                        </span>
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="flex items-center gap-1.5 py-2"
-                      >
-                        <Sofa className="h-4 w-4" />
-                        <span className="text-xs">
-                          {bedroom.furnished ? "Furnished" : "Unfurnished"}
-                        </span>
-                      </Badge>
-                      <Badge
-                        variant="outline"
-                        className="flex items-center gap-1.5 py-2"
-                      >
-                        <Clock3 className="h-4 w-4" />
-                        <span className="text-xs">
-                          Min Stay {bedroom.min_stay_months} mo
-                        </span>
-                      </Badge>
-                    </div>
+                    <BedroomAmenityBadges bedroom={bedroom} />
                     <Button
                       variant="ghost"
                       size="icon"

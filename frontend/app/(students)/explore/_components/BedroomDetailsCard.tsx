@@ -1,7 +1,6 @@
 "use client";
 
 import { ImageGallery } from "./ImageGallery";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,28 +20,13 @@ import {
 import {
   MapPin,
   Euro,
-  Bed,
-  Bath,
-  Users,
-  Clock3,
-  Maximize2,
   Heart,
   ArrowDown,
-  Sofa,
-  Wifi,
-  Car,
-  Wind,
-  Utensils,
-  WashingMachine,
 } from "lucide-react";
 import type { BedroomResponse, PropertyResponse } from "@/lib/api/property";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-const LAUNDRY_LABELS: Record<string, string> = {
-  BUILDING: "In Building",
-  HOUSE: "In House",
-  NONE: "None",
-};
+import { BedroomAmenityBadges } from "@/components/BedroomAmenityBadges";
+import { PropertyAmenityBadges } from "@/components/PropertyAmenityBadges";
 
 const MOCK_IMAGES = [
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
@@ -74,8 +58,6 @@ export function BedroomDetailsCard({
       : property.photos?.length > 0
         ? property.photos
         : MOCK_IMAGES;
-  const sizeSqm = Math.round(bedroom.size_sqft * 0.0929);
-  const propertySizeSqm = Math.round(property.size_sqft * 0.0929);
 
   const formatDate = (value: string) => {
     const parsed = new Date(value);
@@ -148,126 +130,12 @@ export function BedroomDetailsCard({
 
           <div>
             <h3 className="mb-3 text-sm font-semibold">Room Details</h3>
-            <div className="flex flex-wrap gap-1">
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Users className="h-4 w-4" />
-                <span className="text-xs">{bedroom.total_people} People</span>
-              </Badge>
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Bed className="h-4 w-4" />
-                <span className="text-xs">
-                  {bedroom.total_beds} Bed{bedroom.total_beds > 1 ? "s" : ""}
-                </span>
-              </Badge>
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Bath className="h-4 w-4" />
-                <span className="text-xs">
-                  {bedroom.private_bath ? "Private" : "Shared"}
-                </span>
-              </Badge>
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Maximize2 className="h-4 w-4" />
-                <span className="text-xs">{sizeSqm}m²</span>
-              </Badge>
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Sofa className="h-4 w-4" />
-                <span className="text-xs">
-                  {bedroom.furnished ? "Furnished" : "Unfurnished"}
-                </span>
-              </Badge>
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Clock3 className="h-4 w-4" />
-                <span className="text-xs">
-                  Min Stay {bedroom.min_stay_months} mo
-                </span>
-              </Badge>
-            </div>
+            <BedroomAmenityBadges bedroom={bedroom} />
           </div>
 
           <div>
             <h3 className="mb-3 text-sm font-semibold">Property Amenities</h3>
-            <div className="flex flex-wrap gap-1">
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Wifi className="h-4 w-4" />
-                <span className="text-xs">
-                  WiFi: {property.wifi ? "Yes" : "No"}
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Wind className="h-4 w-4" />
-                <span className="text-xs">
-                  AC: {property.ac ? "Yes" : "No"}
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Car className="h-4 w-4" />
-                <span className="text-xs">
-                  Parking: {property.parking ? "Yes" : "No"}
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Utensils className="h-4 w-4" />
-                <span className="text-xs">
-                  Dishwasher: {property.dishwasher ? "Yes" : "No"}
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <WashingMachine className="h-4 w-4" />
-                <span className="text-xs">
-                  Laundry:{" "}
-                  {LAUNDRY_LABELS[property.laundry] ?? property.laundry}
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Bath className="h-4 w-4" />
-                <span className="text-xs">
-                  {property.total_bathrooms} Bathrooms
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Maximize2 className="h-4 w-4" />
-                <span className="text-xs">{propertySizeSqm}m²</span>
-              </Badge>
-            </div>
+            <PropertyAmenityBadges property={property} />
           </div>
         </CardContent>
       </ScrollArea>
