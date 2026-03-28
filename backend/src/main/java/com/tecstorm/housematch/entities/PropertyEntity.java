@@ -1,6 +1,7 @@
 package com.tecstorm.housematch.entities;
 
 import jakarta.persistence.*;
+
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +25,12 @@ public class PropertyEntity {
 
     @Column(name = "lng", nullable = false)
     private Double lng;
+
+    @Column(name = "total_people", nullable = false)
+    private Integer totalPeople;
+
+    @Column(name = "total_bedrooms", nullable = false)
+    private Integer totalBedrooms;
 
     @Column(name = "total_bathrooms", nullable = false)
     private Integer totalBathrooms;
@@ -75,6 +82,8 @@ public class PropertyEntity {
     public String getAddress() { return address; }
     public Double getLat() { return lat; }
     public Double getLng() { return lng; }
+    public Integer getTotalPeople() { return totalPeople; }
+    public Integer getTotalBedrooms() { return totalBedrooms; }
     public Integer getTotalBathrooms() { return totalBathrooms; }
     public Laundry getLaundry() { return laundry; }
     public Boolean getDishwasher() { return dishwasher; }

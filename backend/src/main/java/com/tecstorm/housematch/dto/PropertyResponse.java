@@ -10,6 +10,8 @@ public record PropertyResponse(
     @JsonProperty("address") String address,
     @JsonProperty("lat") Double lat,
     @JsonProperty("lng") Double lng,
+    @JsonProperty("total_people") Integer totalPeople,
+    @JsonProperty("total_bedrooms") Integer totalBedrooms,
     @JsonProperty("total_bathrooms") Integer totalBathrooms,
     @JsonProperty("laundry") Laundry laundry,
     @JsonProperty("dishwasher") Boolean dishwasher,
