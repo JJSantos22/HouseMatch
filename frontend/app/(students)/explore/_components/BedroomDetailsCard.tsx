@@ -81,8 +81,8 @@ export function BedroomDetailsCard({
   return (
     <Card
       className={`relative flex w-full min-w-[320px] max-h-[66vh] flex-col overflow-hidden shadow-lg md:max-h-[90vh] md:w-100 md:shrink-0 pt-0 ${onOpenDetails ? "cursor-pointer" : ""}`}
-      onClick={handleCardClick}
       tabIndex={onOpenDetails ? 0 : -1}
+      onKeyDown={handleCardKeyDown}
       role={onOpenDetails ? "button" : undefined}
       aria-label={onOpenDetails ? "Open house details" : undefined}
     >
@@ -108,7 +108,7 @@ export function BedroomDetailsCard({
       </CardHeader>
 
       <ScrollArea>
-        <CardContent className="space-y-4" onKeyDown={handleCardKeyDown}>
+        <CardContent className="space-y-4" onClick={handleCardClick}>
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold">Availability</h3>
             <p className="text-xs text-muted-foreground">
