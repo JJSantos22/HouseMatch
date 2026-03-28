@@ -1,7 +1,7 @@
 package com.tecstorm.housematch.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tecstorm.housematch.entities.UserRole;
+import com.tecstorm.housematch.entities.User.UserRole;
 
 public record RegisterRequest(
     @JsonProperty("email") String email,

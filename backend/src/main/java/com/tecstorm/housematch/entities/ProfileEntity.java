@@ -3,6 +3,8 @@ package com.tecstorm.housematch.entities;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
+import com.tecstorm.housematch.entities.User.UserRole;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

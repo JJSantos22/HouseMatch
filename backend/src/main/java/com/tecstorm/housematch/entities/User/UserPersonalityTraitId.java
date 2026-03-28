@@ -1,4 +1,4 @@
-package com.tecstorm.housematch.entities;
+package com.tecstorm.housematch.entities.User;
 
 import java.io.Serializable;
 import java.util.UUID;

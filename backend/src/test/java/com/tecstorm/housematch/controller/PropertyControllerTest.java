@@ -1,29 +1,30 @@
 package com.tecstorm.housematch.controller;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.when;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.tecstorm.housematch.dto.BedroomMatchResponse;
-import com.tecstorm.housematch.dto.BedroomMatchesResponse;
-import com.tecstorm.housematch.dto.PropertyTraitsResponse;
-import com.tecstorm.housematch.dto.BedroomResponse;
-import com.tecstorm.housematch.dto.PropertyResponse;
+import com.tecstorm.housematch.dto.Bedroom.BedroomMatchResponse;
+import com.tecstorm.housematch.dto.Bedroom.BedroomMatchesResponse;
+import com.tecstorm.housematch.dto.Bedroom.BedroomResponse;
+import com.tecstorm.housematch.dto.Property.PropertyResponse;
+import com.tecstorm.housematch.dto.Property.PropertyTraitsResponse;
 import com.tecstorm.housematch.dto.TraitMatchBreakdownResponse;
 import com.tecstorm.housematch.service.BedroomMatchingService;
 import com.tecstorm.housematch.service.BedroomService;
 import com.tecstorm.housematch.service.PropertyService;
 import com.tecstorm.housematch.service.PropertyTraitService;
 import com.tecstorm.housematch.service.ReviewService;
-import java.util.List;
-import java.util.UUID;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 class PropertyControllerTest {
 
@@ -63,12 +64,12 @@ class PropertyControllerTest {
 
         UUID propertyId = UUID.randomUUID();
         when(propertyTraitService.get(propertyId)).thenReturn(new PropertyTraitsResponse(
-            com.tecstorm.housematch.entities.PersonalityLevel.BALANCED,
-            com.tecstorm.housematch.entities.PersonalityLevel.AMBIVERT,
-            com.tecstorm.housematch.entities.PersonalityLevel.MEDIUM,
-            com.tecstorm.housematch.entities.PersonalityLevel.BALANCED,
-            com.tecstorm.housematch.entities.PersonalityLevel.MODERATE,
-            com.tecstorm.housematch.entities.PersonalityLevel.MEDIUM
+            com.tecstorm.housematch.entities.Personality.PersonalityLevel.BALANCED,
+            com.tecstorm.housematch.entities.Personality.PersonalityLevel.AMBIVERT,
+            com.tecstorm.housematch.entities.Personality.PersonalityLevel.MEDIUM,
+            com.tecstorm.housematch.entities.Personality.PersonalityLevel.BALANCED,
+            com.tecstorm.housematch.entities.Personality.PersonalityLevel.MODERATE,
+            com.tecstorm.housematch.entities.Personality.PersonalityLevel.MEDIUM
         ));
 
         mockMvc.perform(get("/api/property/{propertyId}/traits", propertyId))

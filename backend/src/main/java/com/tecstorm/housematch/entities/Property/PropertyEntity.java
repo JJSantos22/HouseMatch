@@ -1,8 +1,11 @@
-package com.tecstorm.housematch.entities;
+package com.tecstorm.housematch.entities.Property;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import com.tecstorm.housematch.entities.Bedroom.BedroomEntity;
+import com.tecstorm.housematch.entities.Laundry;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

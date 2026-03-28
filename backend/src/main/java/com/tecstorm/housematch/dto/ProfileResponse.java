@@ -2,7 +2,8 @@ package com.tecstorm.housematch.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tecstorm.housematch.entities.UserRole;
+import com.tecstorm.housematch.entities.User.UserRole;
+
 import java.util.List;
 import java.util.UUID;
 

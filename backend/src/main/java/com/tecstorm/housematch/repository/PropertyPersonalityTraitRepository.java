@@ -1,14 +1,16 @@
 package com.tecstorm.housematch.repository;
 
-import com.tecstorm.housematch.entities.PersonalityCategory;
-import com.tecstorm.housematch.entities.PersonalityTraitEntity;
-import com.tecstorm.housematch.entities.PropertyPersonalityTraitEntity;
-import com.tecstorm.housematch.entities.PropertyPersonalityTraitId;
 import java.util.List;
 import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+
+import com.tecstorm.housematch.entities.Personality.PersonalityCategory;
+import com.tecstorm.housematch.entities.Personality.PersonalityTraitEntity;
+import com.tecstorm.housematch.entities.Property.PropertyPersonalityTraitEntity;
+import com.tecstorm.housematch.entities.Property.PropertyPersonalityTraitId;
 
 public interface PropertyPersonalityTraitRepository extends JpaRepository<PropertyPersonalityTraitEntity, PropertyPersonalityTraitId> {
     @Query("SELECT p FROM PropertyPersonalityTraitEntity pt JOIN PersonalityTraitEntity p ON pt.personalityTraitId = p.id WHERE pt.propertyId = :propertyId")

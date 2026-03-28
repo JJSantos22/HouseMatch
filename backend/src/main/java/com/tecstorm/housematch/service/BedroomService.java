@@ -1,18 +1,19 @@
 package com.tecstorm.housematch.service;
 
-import com.tecstorm.housematch.dto.BedroomDetailResponse;
-import com.tecstorm.housematch.dto.BedroomResponse;
-import com.tecstorm.housematch.dto.BedroomsDetailResponse;
-import com.tecstorm.housematch.dto.PropertyResponse;
-import com.tecstorm.housematch.entities.BedroomEntity;
-import com.tecstorm.housematch.entities.PropertyEntity;
-import com.tecstorm.housematch.repository.BedroomRepository;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.UUID;
+import com.tecstorm.housematch.dto.Bedroom.BedroomDetailResponse;
+import com.tecstorm.housematch.dto.Bedroom.BedroomResponse;
+import com.tecstorm.housematch.dto.Bedroom.BedroomsDetailResponse;
+import com.tecstorm.housematch.dto.Property.PropertyResponse;
+import com.tecstorm.housematch.entities.Bedroom.BedroomEntity;
+import com.tecstorm.housematch.entities.Property.PropertyEntity;
+import com.tecstorm.housematch.repository.BedroomRepository;
 
 @Service
 public class BedroomService {

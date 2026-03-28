@@ -1,7 +1,8 @@
-package com.tecstorm.housematch.dto;
+package com.tecstorm.housematch.dto.Bedroom;
+
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 
 public record BedroomMatchesResponse(
     @JsonProperty("matches") List<BedroomMatchResponse> matches

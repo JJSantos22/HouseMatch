@@ -1,13 +1,15 @@
 package com.tecstorm.housematch.service;
 
-import com.tecstorm.housematch.dto.BedroomMapResponse;
-import com.tecstorm.housematch.dto.PropertyMapResponse;
-import com.tecstorm.housematch.dto.PropertyResponse;
-import com.tecstorm.housematch.entities.PropertyEntity;
-import com.tecstorm.housematch.repository.PropertyRepository;
-import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
+import com.tecstorm.housematch.dto.Bedroom.BedroomMapResponse;
+import com.tecstorm.housematch.dto.Property.PropertyMapResponse;
+import com.tecstorm.housematch.dto.Property.PropertyResponse;
+import com.tecstorm.housematch.entities.Property.PropertyEntity;
+import com.tecstorm.housematch.repository.PropertyRepository;
 
 @Service
 public class PropertyService {

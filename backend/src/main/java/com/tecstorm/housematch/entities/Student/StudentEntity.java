@@ -1,7 +1,16 @@
-package com.tecstorm.housematch.entities;
+package com.tecstorm.housematch.entities.Student;
 
-import jakarta.persistence.*;
 import java.util.UUID;
+
+import com.tecstorm.housematch.entities.ProfileEntity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "student")

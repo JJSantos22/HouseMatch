@@ -1,6 +1,5 @@
 package com.tecstorm.housematch.service;
 
-import com.tecstorm.housematch.ai.MatchInput;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -8,12 +7,13 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.tecstorm.housematch.ai.MatchInput;
 import com.tecstorm.housematch.dto.PersonalityTraitsResponse;
 import com.tecstorm.housematch.dto.UpdateProfileRequest;
-import com.tecstorm.housematch.entities.PersonalityCategory;
-import com.tecstorm.housematch.entities.PersonalityLevel;
-import com.tecstorm.housematch.entities.PersonalityTraitEntity;
-import com.tecstorm.housematch.entities.UserPersonalityTraitEntity;
+import com.tecstorm.housematch.entities.Personality.PersonalityCategory;
+import com.tecstorm.housematch.entities.Personality.PersonalityLevel;
+import com.tecstorm.housematch.entities.Personality.PersonalityTraitEntity;
+import com.tecstorm.housematch.entities.User.UserPersonalityTraitEntity;
 import com.tecstorm.housematch.repository.PersonalityTraitRepository;
 import com.tecstorm.housematch.repository.UserPersonalityTraitRepository;
 

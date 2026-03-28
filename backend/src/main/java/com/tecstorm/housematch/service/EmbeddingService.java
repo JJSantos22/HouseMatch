@@ -1,9 +1,11 @@
 package com.tecstorm.housematch.service;
 
-import com.tecstorm.housematch.entities.PersonalityCategory;
-import com.tecstorm.housematch.entities.PersonalityLevel;
 import java.util.Map;
+
 import org.springframework.stereotype.Service;
+
+import com.tecstorm.housematch.entities.Personality.PersonalityCategory;
+import com.tecstorm.housematch.entities.Personality.PersonalityLevel;
 
 @Service
 public class EmbeddingService {

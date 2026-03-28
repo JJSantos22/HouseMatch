@@ -1,24 +1,26 @@
 package com.tecstorm.housematch.service;
 
-import com.tecstorm.housematch.ai.MatchInput;
-import com.tecstorm.housematch.dto.PropertyTraitsResponse;
-import com.tecstorm.housematch.dto.UpdatePropertyTraitsRequest;
-import com.tecstorm.housematch.entities.PersonalityCategory;
-import com.tecstorm.housematch.entities.PersonalityLevel;
-import com.tecstorm.housematch.entities.PersonalityTraitEntity;
-import com.tecstorm.housematch.entities.PropertyEntity;
-import com.tecstorm.housematch.entities.PropertyPersonalityTraitEntity;
-import com.tecstorm.housematch.repository.PersonalityTraitRepository;
-import com.tecstorm.housematch.repository.PropertyPersonalityTraitRepository;
-import com.tecstorm.housematch.repository.PropertyRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.tecstorm.housematch.ai.MatchInput;
+import com.tecstorm.housematch.dto.Property.PropertyTraitsResponse;
+import com.tecstorm.housematch.dto.UpdatePropertyTraitsRequest;
+import com.tecstorm.housematch.entities.Personality.PersonalityCategory;
+import com.tecstorm.housematch.entities.Personality.PersonalityLevel;
+import com.tecstorm.housematch.entities.Personality.PersonalityTraitEntity;
+import com.tecstorm.housematch.entities.Property.PropertyEntity;
+import com.tecstorm.housematch.entities.Property.PropertyPersonalityTraitEntity;
+import com.tecstorm.housematch.repository.PersonalityTraitRepository;
+import com.tecstorm.housematch.repository.PropertyPersonalityTraitRepository;
+import com.tecstorm.housematch.repository.PropertyRepository;
 
 @Service
 public class PropertyTraitService {

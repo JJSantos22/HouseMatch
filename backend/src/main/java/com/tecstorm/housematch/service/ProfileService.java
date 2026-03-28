@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tecstorm.housematch.dto.ProfileResponse;
 import com.tecstorm.housematch.dto.UpdateProfileRequest;
 import com.tecstorm.housematch.entities.ProfileEntity;
-import com.tecstorm.housematch.entities.UserRole;
+import com.tecstorm.housematch.entities.User.UserRole;
 import com.tecstorm.housematch.repository.ProfileRepository;
 
 @Service

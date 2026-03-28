@@ -1,8 +1,9 @@
-package com.tecstorm.housematch.dto;
+package com.tecstorm.housematch.dto.Bedroom;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record BedroomResponse(
     @JsonProperty("id") UUID id,

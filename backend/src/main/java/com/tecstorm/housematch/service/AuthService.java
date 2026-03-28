@@ -2,6 +2,8 @@ package com.tecstorm.housematch.service;
 
 import com.tecstorm.housematch.dto.*;
 import com.tecstorm.housematch.entities.*;
+import com.tecstorm.housematch.entities.Student.StudentEntity;
+import com.tecstorm.housematch.entities.User.UserRole;
 import com.tecstorm.housematch.repository.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,7 @@
 package com.tecstorm.housematch.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.tecstorm.housematch.entities.PersonalityLevel;
+import com.tecstorm.housematch.entities.Personality.PersonalityLevel;
 
 public record UpdatePropertyTraitsRequest(
     @JsonProperty("schedule") PersonalityLevel schedule,

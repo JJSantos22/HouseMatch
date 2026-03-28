@@ -1,11 +1,12 @@
-package com.tecstorm.housematch.entities;
+package com.tecstorm.housematch.entities.Property;
+
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
-import java.util.UUID;
 
 @Entity
 @Table(name = "property_personality_trait")

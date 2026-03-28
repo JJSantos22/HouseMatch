@@ -1,7 +1,8 @@
 package com.tecstorm.housematch.service;
 
 import com.tecstorm.housematch.dto.ProfileResponse;
-import com.tecstorm.housematch.entities.UserRole;
+import com.tecstorm.housematch.entities.User.UserRole;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

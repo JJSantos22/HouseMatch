@@ -1,7 +1,7 @@
 package com.tecstorm.housematch.service;
 
 import com.tecstorm.housematch.dto.UpdateProfileRequest;
-import com.tecstorm.housematch.entities.StudentEntity;
+import com.tecstorm.housematch.entities.Student.StudentEntity;
 import com.tecstorm.housematch.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 import java.util.UUID;

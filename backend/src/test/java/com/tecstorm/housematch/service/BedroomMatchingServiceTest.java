@@ -1,18 +1,19 @@
 package com.tecstorm.housematch.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-
-import com.tecstorm.housematch.ai.MatchInput;
-import com.tecstorm.housematch.dto.BedroomMatchesResponse;
-import com.tecstorm.housematch.entities.BedroomEntity;
-import com.tecstorm.housematch.entities.PropertyEntity;
-import com.tecstorm.housematch.repository.BedroomRepository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.when;
+
+import com.tecstorm.housematch.ai.MatchInput;
+import com.tecstorm.housematch.dto.Bedroom.BedroomMatchesResponse;
+import com.tecstorm.housematch.entities.Bedroom.BedroomEntity;
+import com.tecstorm.housematch.entities.Property.PropertyEntity;
+import com.tecstorm.housematch.repository.BedroomRepository;
 
 class BedroomMatchingServiceTest {
 

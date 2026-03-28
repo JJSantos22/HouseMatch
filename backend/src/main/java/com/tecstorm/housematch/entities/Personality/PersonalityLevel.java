@@ -1,4 +1,4 @@
-package com.tecstorm.housematch.entities;
+package com.tecstorm.housematch.entities.Personality;
 
 public enum PersonalityLevel {
     EARLY_BIRD, BALANCED, NIGHT_OWL,

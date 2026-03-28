@@ -1,8 +1,9 @@
-package com.tecstorm.housematch.dto;
+package com.tecstorm.housematch.dto.Property;
+
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tecstorm.housematch.entities.Laundry;
-import java.util.UUID;
 
 public record PropertyResponse(
     @JsonProperty("id") UUID id,
