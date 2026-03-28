@@ -1,6 +1,7 @@
 package com.tecstorm.housematch.controller;
 
 import com.tecstorm.housematch.dto.BedroomDetailResponse;
+import com.tecstorm.housematch.dto.BedroomsDetailResponse;
 import com.tecstorm.housematch.dto.PropertyMapResponse;
 import com.tecstorm.housematch.dto.PropertyResponse;
 import com.tecstorm.housematch.service.BedroomService;
@@ -38,5 +39,11 @@ public class PropertyController {
             @PathVariable UUID propertyId,
             @PathVariable UUID bedroomId) {
         return ResponseEntity.ok(bedroomService.getById(propertyId, bedroomId));
+    }
+
+    @GetMapping("/{propertyId}/bedroom")
+    public ResponseEntity<BedroomsDetailResponse> getBedroomsByPropertyId(
+            @PathVariable UUID propertyId) {
+        return ResponseEntity.ok(bedroomService.getByPropertyId(propertyId));
     }
 }

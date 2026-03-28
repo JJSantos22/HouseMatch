@@ -253,6 +253,26 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Get Bedrooms",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/property/{{propertyId}}/bedroom",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "{{propertyId}}",
+                "bedroom"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     }
