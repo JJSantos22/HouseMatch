@@ -483,13 +483,13 @@ export default function HouseDetailsPage() {
                   <ItemFooter className="items-start gap-2">
                     <BedroomAmenityBadges bedroom={bedroom} />
                     <Button
-                      variant="ghost"
+                      variant={favoritedIds.has(bedroom.id) ? "destructive" : "ghost"}
                       size="icon"
                       onClick={() => handleFavoriteToggle(bedroom.id)}
                       aria-label={`${favoritedIds.has(bedroom.id) ? "Remove" : "Add"} ${bedroom.title} ${favoritedIds.has(bedroom.id) ? "from" : "to"} favorites`}
                     >
                       <Heart
-                        className={`transition-transform duration-200 ${poppingId === bedroom.id ? "scale-150" : "scale-100"} ${favoritedIds.has(bedroom.id) ? "fill-current text-red-500" : ""}`}
+                        className={`transition-transform duration-200 ${poppingId === bedroom.id ? "scale-150" : "scale-100"} ${favoritedIds.has(bedroom.id) ? "fill-current" : ""}`}
                       />
                     </Button>
                   </ItemFooter>

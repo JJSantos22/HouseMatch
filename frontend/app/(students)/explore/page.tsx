@@ -15,6 +15,7 @@ import {
   type PropertyMapResponse,
   type BedroomDetailResponse,
 } from "@/lib/api/property";
+import { getFavorites } from "@/lib/api/favorites";
 
 export default function ExplorePage() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function ExplorePage() {
   const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0);
   const [isLoadingSmartSuggestions, setIsLoadingSmartSuggestions] =
     useState(false);
+  const [favoritedIds, setFavoritedIds] = useState<Set<string>>(new Set());
 
   const selectedProperty = useMemo(
     () => properties.find((p) => p.id === selectedPropertyId) ?? null,
@@ -58,6 +60,16 @@ export default function ExplorePage() {
 
     fetchProperties();
   }, []);
+
+  // Fetch user's favorited bedroom IDs
+  useEffect(() => {
+    if (!userId) return;
+    getFavorites(userId)
+      .then((data) => {
+        setFavoritedIds(new Set(data.map((d) => d.bedroom.id)));
+      })
+      .catch((error) => console.error("Failed to fetch favorites:", error));
+  }, [userId]);
 
   // Select first bedroom when property changes
   useEffect(() => {
@@ -129,6 +141,18 @@ export default function ExplorePage() {
 
   const handleSelectBedroom = (bedroomId: string) => {
     setSelectedBedroomId(bedroomId);
+  };
+
+  const handleFavoriteChange = (bedroomId: string, isFavorited: boolean) => {
+    setFavoritedIds((prev) => {
+      const next = new Set(prev);
+      if (isFavorited) {
+        next.add(bedroomId);
+      } else {
+        next.delete(bedroomId);
+      }
+      return next;
+    });
   };
 
   const handleMatch = () => {
@@ -205,7 +229,7 @@ export default function ExplorePage() {
 
       {selectedBedroom && selectedProperty && (
         <div className="pointer-events-none absolute inset-0 flex items-end justify-center md:items-start md:justify-start">
-          <div className="pointer-events-auto flex flex-col md:flex-row gap-2 p-4 md:p-6 w-full max-h-full max-w-md md:max-w-none md:w-auto">
+          <div className="pointer-events-auto flex flex-col md:flex-row gap-2 p-4 md:p-6 w-full max-h-full">
             {selectedProperty.bedrooms.length > 1 && isMobile && (
               <BedroomList
                 bedrooms={selectedProperty.bedrooms}
@@ -218,6 +242,8 @@ export default function ExplorePage() {
               bedroom={selectedBedroom.bedroom}
               property={selectedBedroom.property}
               userId={userId}
+              initialFavorited={favoritedIds.has(selectedBedroom.bedroom.id)}
+              onFavoriteChange={handleFavoriteChange}
               onMatch={handleMatch}
               onClose={handleClose}
               onExitSmartSuggestion={
