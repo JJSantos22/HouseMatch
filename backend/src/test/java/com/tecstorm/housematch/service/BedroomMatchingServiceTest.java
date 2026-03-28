@@ -11,16 +11,19 @@ import static org.mockito.Mockito.when;
 
 import com.tecstorm.housematch.ai.MatchInput;
 import com.tecstorm.housematch.dto.Bedroom.BedroomMatchesResponse;
+import com.tecstorm.housematch.dto.Property.PropertyMatchResponse;
 import com.tecstorm.housematch.entities.Bedroom.BedroomEntity;
 import com.tecstorm.housematch.entities.Property.PropertyEntity;
 import com.tecstorm.housematch.entities.Student.StudentEntity;
 import com.tecstorm.housematch.repository.BedroomRepository;
+import com.tecstorm.housematch.repository.PropertyRepository;
 
 class BedroomMatchingServiceTest {
 
     @Test
     void returnsMatchesSortedByScoreDescending() {
         BedroomRepository bedroomRepository = Mockito.mock(BedroomRepository.class);
+        PropertyRepository propertyRepository = Mockito.mock(PropertyRepository.class);
         StudentService studentService = Mockito.mock(StudentService.class);
         PersonalityTraitService personalityTraitService = Mockito.mock(PersonalityTraitService.class);
         PropertyTraitService propertyTraitService = Mockito.mock(PropertyTraitService.class);
@@ -72,7 +75,8 @@ class BedroomMatchingServiceTest {
             bedroomRepository,
             studentService,
             personalityTraitService,
-            propertyTraitService
+            propertyTraitService,
+            propertyRepository
         );
 
         BedroomMatchesResponse response = service.getMatchesByProfileId(UUID.randomUUID());
@@ -80,6 +84,50 @@ class BedroomMatchingServiceTest {
         assertEquals(2, response.matches().size());
         assertEquals("High Match", response.matches().getFirst().bedroom().title());
         assertEquals(100, response.matches().getFirst().score());
+    }
+
+    @Test
+    void returnsPropertyMatchWithReasoning() {
+        BedroomRepository bedroomRepository = Mockito.mock(BedroomRepository.class);
+        PropertyRepository propertyRepository = Mockito.mock(PropertyRepository.class);
+        StudentService studentService = Mockito.mock(StudentService.class);
+        PersonalityTraitService personalityTraitService = Mockito.mock(PersonalityTraitService.class);
+        PropertyTraitService propertyTraitService = Mockito.mock(PropertyTraitService.class);
+
+        UUID propertyId = UUID.randomUUID();
+        UUID studentId = UUID.randomUUID();
+        StudentEntity student = Mockito.mock(StudentEntity.class);
+        when(student.getId()).thenReturn(studentId);
+        when(studentService.get(Mockito.any())).thenReturn(student);
+
+        PropertyEntity property = property(propertyId, "Property Match");
+        when(propertyRepository.findById(propertyId)).thenReturn(java.util.Optional.of(property));
+
+        MatchInput input = new MatchInput(
+            MatchInput.Schedule.BALANCED,
+            MatchInput.Social.AMBIVERT,
+            MatchInput.Preference.MEDIUM,
+            MatchInput.Academic.BALANCED,
+            MatchInput.Cleanliness.MODERATE,
+            MatchInput.Preference.MEDIUM
+        );
+        when(personalityTraitService.getMatchInput(studentId)).thenReturn(input);
+        when(propertyTraitService.getMatchInput(propertyId)).thenReturn(input);
+
+        BedroomMatchingService service = new BedroomMatchingService(
+            bedroomRepository,
+            studentService,
+            personalityTraitService,
+            propertyTraitService,
+            propertyRepository
+        );
+
+        PropertyMatchResponse response = service.getPropertyMatch(propertyId, UUID.randomUUID());
+
+        assertEquals("Property Match", response.property().title());
+        assertEquals(100, response.score());
+        assertEquals("schedule", response.reasoning().getFirst().trait());
+        assertEquals("BALANCED", response.reasoning().getFirst().propertyValue());
     }
 
     private static BedroomEntity bedroom(UUID id, String title, boolean isActive, PropertyEntity property) {

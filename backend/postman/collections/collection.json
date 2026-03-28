@@ -384,30 +384,6 @@
           "response": []
         },
         {
-          "name": "Get Bedroom Match",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/property/{{propertyId}}/bedroom/{{bedroomId}}/match/student/{{studentId}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "api",
-                "property",
-                "{{propertyId}}",
-                "bedroom",
-                "{{bedroomId}}",
-                "match",
-                "student",
-                "{{studentId}}"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
           "name": "Get Property Traits",
           "request": {
             "method": "GET",
@@ -512,6 +488,31 @@
                 "property",
                 "{{propertyId}}",
                 "review"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Property Match",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/property/{{propertyId}}/match",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "{{propertyId}}",
+                "match"
               ]
             }
           },

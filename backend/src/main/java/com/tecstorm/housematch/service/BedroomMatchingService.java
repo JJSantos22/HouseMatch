@@ -14,11 +14,14 @@ import com.tecstorm.housematch.ai.MatchResult;
 import com.tecstorm.housematch.dto.Bedroom.BedroomMatchResponse;
 import com.tecstorm.housematch.dto.Bedroom.BedroomMatchesResponse;
 import com.tecstorm.housematch.dto.Bedroom.BedroomResponse;
+import com.tecstorm.housematch.dto.Property.PropertyMatchReasonResponse;
+import com.tecstorm.housematch.dto.Property.PropertyMatchResponse;
 import com.tecstorm.housematch.dto.Property.PropertyResponse;
 import com.tecstorm.housematch.dto.TraitMatchBreakdownResponse;
 import com.tecstorm.housematch.entities.Bedroom.BedroomEntity;
 import com.tecstorm.housematch.entities.Property.PropertyEntity;
 import com.tecstorm.housematch.repository.BedroomRepository;
+import com.tecstorm.housematch.repository.PropertyRepository;
 
 @Service
 public class BedroomMatchingService {
@@ -26,18 +29,21 @@ public class BedroomMatchingService {
     private final StudentService studentService;
     private final PersonalityTraitService personalityTraitService;
     private final PropertyTraitService propertyTraitService;
+    private final PropertyRepository propertyRepository;
     private final CompatibilityScorer compatibilityScorer;
 
     public BedroomMatchingService(
         BedroomRepository bedroomRepository,
         StudentService studentService,
         PersonalityTraitService personalityTraitService,
-        PropertyTraitService propertyTraitService
+        PropertyTraitService propertyTraitService,
+        PropertyRepository propertyRepository
     ) {
         this.bedroomRepository = bedroomRepository;
         this.studentService = studentService;
         this.personalityTraitService = personalityTraitService;
         this.propertyTraitService = propertyTraitService;
+        this.propertyRepository = propertyRepository;
         this.compatibilityScorer = new CompatibilityScorer();
     }
 
@@ -56,14 +62,14 @@ public class BedroomMatchingService {
     }
 
     @Transactional(readOnly = true)
-    public BedroomMatchResponse getMatch(UUID propertyId, UUID bedroomId, UUID studentId) {
-        studentService.getById(studentId);
-        BedroomEntity bedroom = bedroomRepository.findByIdAndPropertyId(bedroomId, propertyId)
+    public PropertyMatchResponse getPropertyMatch(UUID propertyId, UUID profileId) {
+        UUID studentId = studentService.get(profileId).getId();
+        PropertyEntity property = propertyRepository.findById(propertyId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         var studentInput = personalityTraitService.getMatchInput(studentId);
-        var propertyInput = propertyTraitService.getMatchInput(bedroom.getProperty().getId());
-        return toMatchResponse(bedroom, compatibilityScorer.score(studentInput, propertyInput));
+        var propertyInput = propertyTraitService.getMatchInput(propertyId);
+        return toPropertyMatchResponse(property, compatibilityScorer.score(studentInput, propertyInput));
     }
 
     private BedroomMatchResponse toMatchResponse(BedroomEntity bedroom, MatchResult result) {
@@ -84,23 +90,7 @@ public class BedroomMatchingService {
                 bedroom.getPhotos(),
                 bedroom.getIsActive()
             ),
-            new PropertyResponse(
-                property.getId(),
-                property.getTitle(),
-                property.getAddress(),
-                property.getLat(),
-                property.getLng(),
-                property.getTotalPeople(),
-                property.getTotalBedrooms(),
-                property.getTotalBathrooms(),
-                property.getLaundry(),
-                property.getDishwasher(),
-                property.getParking(),
-                property.getAc(),
-                property.getWifi(),
-                property.getSizeSqft(),
-                property.getPhotos()
-            ),
+            toPropertyResponse(property),
             result.score(),
             result.breakdown().stream()
                 .map(trait -> new TraitMatchBreakdownResponse(
@@ -112,6 +102,43 @@ public class BedroomMatchingService {
                     trait.score()
                 ))
                 .toList()
+        );
+    }
+
+    private PropertyMatchResponse toPropertyMatchResponse(PropertyEntity property, MatchResult result) {
+        return new PropertyMatchResponse(
+            toPropertyResponse(property),
+            result.score(),
+            result.breakdown().stream()
+                .map(trait -> new PropertyMatchReasonResponse(
+                    trait.trait(),
+                    trait.studentValue(),
+                    trait.bedroomValue(),
+                    trait.weight(),
+                    trait.points(),
+                    trait.score()
+                ))
+                .toList()
+        );
+    }
+
+    private PropertyResponse toPropertyResponse(PropertyEntity property) {
+        return new PropertyResponse(
+            property.getId(),
+            property.getTitle(),
+            property.getAddress(),
+            property.getLat(),
+            property.getLng(),
+            property.getTotalPeople(),
+            property.getTotalBedrooms(),
+            property.getTotalBathrooms(),
+            property.getLaundry(),
+            property.getDishwasher(),
+            property.getParking(),
+            property.getAc(),
+            property.getWifi(),
+            property.getSizeSqft(),
+            property.getPhotos()
         );
     }
 }

@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tecstorm.housematch.dto.ReviewResponse;
-import com.tecstorm.housematch.dto.UpdatePropertyTraitsRequest;
 import com.tecstorm.housematch.dto.Bedroom.BedroomDetailResponse;
-import com.tecstorm.housematch.dto.Bedroom.BedroomMatchResponse;
 import com.tecstorm.housematch.dto.Bedroom.BedroomMatchesResponse;
 import com.tecstorm.housematch.dto.Bedroom.BedroomsDetailResponse;
 import com.tecstorm.housematch.dto.Property.PropertyMapResponse;
+import com.tecstorm.housematch.dto.Property.PropertyMatchResponse;
 import com.tecstorm.housematch.dto.Property.PropertyResponse;
 import com.tecstorm.housematch.dto.Property.PropertyTraitsResponse;
+import com.tecstorm.housematch.dto.ReviewResponse;
+import com.tecstorm.housematch.dto.UpdatePropertyTraitsRequest;
 import com.tecstorm.housematch.service.BedroomMatchingService;
 import com.tecstorm.housematch.service.BedroomService;
 import com.tecstorm.housematch.service.PropertyService;
@@ -86,13 +86,12 @@ public class PropertyController {
         return ResponseEntity.ok(bedroomMatchingService.getMatchesByProfileId(userId));
     }
 
-    @GetMapping("/{propertyId}/bedroom/{bedroomId}/match/student/{studentId}")
-    public ResponseEntity<BedroomMatchResponse> getBedroomMatch(
+    @GetMapping("/{propertyId}/match")
+    public ResponseEntity<PropertyMatchResponse> getHouseMatch(
         @PathVariable UUID propertyId,
-        @PathVariable UUID bedroomId,
-        @PathVariable UUID studentId
+        @RequestHeader("X-User-Id") UUID userId
     ) {
-        return ResponseEntity.ok(bedroomMatchingService.getMatch(propertyId, bedroomId, studentId));
+        return ResponseEntity.ok(bedroomMatchingService.getPropertyMatch(propertyId, userId));
     }
 
     @GetMapping("/{propertyId}/traits")

@@ -17,6 +17,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.tecstorm.housematch.dto.Bedroom.BedroomMatchResponse;
 import com.tecstorm.housematch.dto.Bedroom.BedroomMatchesResponse;
 import com.tecstorm.housematch.dto.Bedroom.BedroomResponse;
+import com.tecstorm.housematch.dto.Property.PropertyMatchReasonResponse;
+import com.tecstorm.housematch.dto.Property.PropertyMatchResponse;
 import com.tecstorm.housematch.dto.Property.PropertyResponse;
 import com.tecstorm.housematch.dto.Property.PropertyTraitsResponse;
 import com.tecstorm.housematch.dto.TraitMatchBreakdownResponse;
@@ -76,6 +78,31 @@ class PropertyControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.schedule").value("BALANCED"))
             .andExpect(jsonPath("$.guest_frequency").value("MEDIUM"));
+    }
+
+    @Test
+    void returnsPropertyMatch() throws Exception {
+        PropertyService propertyService = org.mockito.Mockito.mock(PropertyService.class);
+        BedroomService bedroomService = org.mockito.Mockito.mock(BedroomService.class);
+        ReviewService reviewService = org.mockito.Mockito.mock(ReviewService.class);
+        BedroomMatchingService bedroomMatchingService = org.mockito.Mockito.mock(BedroomMatchingService.class);
+        PropertyTraitService propertyTraitService = org.mockito.Mockito.mock(PropertyTraitService.class);
+        MockMvc mockMvc = mockMvc(propertyService, bedroomService, reviewService, bedroomMatchingService, propertyTraitService);
+
+        UUID propertyId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        when(bedroomMatchingService.getPropertyMatch(propertyId, userId)).thenReturn(new PropertyMatchResponse(
+            new PropertyResponse(propertyId, "Property A", "Address", 0.0, 0.0, 4, 2, 2, null, false, false, false, true, null, null),
+            88,
+            List.of(new PropertyMatchReasonResponse("social", "AMBIVERT", "AMBIVERT", 20, 20, 100))
+        ));
+
+        mockMvc.perform(get("/api/property/{propertyId}/match", propertyId).header("X-User-Id", userId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.property.id").value(propertyId.toString()))
+            .andExpect(jsonPath("$.score").value(88))
+            .andExpect(jsonPath("$.reasoning[0].trait").value("social"))
+            .andExpect(jsonPath("$.reasoning[0].property_value").value("AMBIVERT"));
     }
 
     @Test
