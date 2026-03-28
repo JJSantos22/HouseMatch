@@ -11,6 +11,7 @@ import {
   ChevronRight,
   Heart,
   MapPin,
+  Phone,
   SendHorizonal,
 } from "lucide-react";
 import {
@@ -18,6 +19,9 @@ import {
   type BedroomResponse,
   type PropertyResponse,
 } from "@/lib/api/property";
+import { addFavorite, removeFavorite } from "@/lib/api/favorites";
+import { ApiError } from "@/lib/api/client";
+import { useAuthStore } from "@/lib/auth/store";
 import { Button } from "@/components/ui/button";
 import { BedroomAmenityBadges } from "@/components/BedroomAmenityBadges";
 import { PropertyAmenityBadges } from "@/components/PropertyAmenityBadges";
@@ -96,8 +100,11 @@ function getMockReviews(
 export default function HouseDetailsPage() {
   const params = useParams<{ id: string }>();
   const propertyId = params?.id;
+  const userId = useAuthStore((state) => state.session?.userId);
 
   const [isLoading, setIsLoading] = useState(true);
+  const [favoritedIds, setFavoritedIds] = useState<Set<string>>(new Set());
+  const [poppingId, setPoppingId] = useState<string | null>(null);
   const [property, setProperty] = useState<PropertyResponse | null>(null);
   const [bedrooms, setBedrooms] = useState<BedroomResponse[]>([]);
   const [reviews, setReviews] = useState<PropertyReview[]>([]);
@@ -179,6 +186,35 @@ export default function HouseDetailsPage() {
   }, [bedrooms]);
 
   const currentImage = galleryImages[currentImageIndex];
+
+  const handleFavoriteToggle = async (bedroomId: string) => {
+    if (!userId) return;
+    setPoppingId(bedroomId);
+    setTimeout(() => setPoppingId(null), 200);
+
+    if (favoritedIds.has(bedroomId)) {
+      try {
+        await removeFavorite(userId, bedroomId);
+        setFavoritedIds((prev) => { const s = new Set(prev); s.delete(bedroomId); return s; });
+        toast.success("Removed from favorites");
+      } catch {
+        toast.error("Failed to remove from favorites");
+      }
+    } else {
+      try {
+        await addFavorite(userId, bedroomId);
+        setFavoritedIds((prev) => new Set(prev).add(bedroomId));
+        toast.success("Added to favorites");
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 409) {
+          setFavoritedIds((prev) => new Set(prev).add(bedroomId));
+          toast.info("Already in your favorites");
+        } else {
+          toast.error("Failed to add to favorites");
+        }
+      }
+    }
+  };
 
   const handlePreviousImage = () => {
     setCurrentImageIndex((prev) =>
@@ -402,10 +438,12 @@ export default function HouseDetailsPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => toast.success("Added to favorites")}
-                      aria-label={`Add ${bedroom.title} to favorites`}
+                      onClick={() => handleFavoriteToggle(bedroom.id)}
+                      aria-label={`${favoritedIds.has(bedroom.id) ? "Remove" : "Add"} ${bedroom.title} ${favoritedIds.has(bedroom.id) ? "from" : "to"} favorites`}
                     >
-                      <Heart />
+                      <Heart
+                        className={`transition-transform duration-200 ${poppingId === bedroom.id ? "scale-150" : "scale-100"} ${favoritedIds.has(bedroom.id) ? "fill-current text-red-500" : ""}`}
+                      />
                     </Button>
                   </ItemFooter>
                 </Item>
@@ -437,6 +475,14 @@ export default function HouseDetailsPage() {
 
       <div className="border-t bg-background/95 p-3 backdrop-blur">
         <div className="mx-auto flex w-full max-w-3xl gap-2">
+          <Button
+            variant="outline"
+            className="flex-1 border-blue-500 text-blue-500 hover:bg-blue-50 hover:text-blue-600"
+            onClick={() => toast.info("Call feature coming soon")}
+          >
+            <Phone className="mr-2 h-4 w-4" />
+            Call
+          </Button>
           <Button
             className="flex-1"
             onClick={() => toast.info("Opening message thread")}
