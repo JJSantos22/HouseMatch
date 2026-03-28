@@ -58,6 +58,21 @@ export interface BedroomsDetailResponse {
   property: PropertyResponse;
 }
 
+export interface PropertyMatchReasonResponse {
+  trait: string;
+  student_value: string;
+  property_value: string;
+  weight: number;
+  points: number;
+  score: number;
+}
+
+export interface PropertyMatchResponse {
+  property: PropertyResponse;
+  score: number;
+  reasoning: PropertyMatchReasonResponse[];
+}
+
 export async function getPropertiesForMap(): Promise<PropertyMapResponse[]> {
   return apiRequest<PropertyMapResponse[]>("/api/property/map");
 }
@@ -72,6 +87,15 @@ export async function getBedroomDetail(propertyId: string, bedroomId: string): P
 
 export async function getPropertyById(propertyId: string): Promise<PropertyResponse> {
   return apiRequest<PropertyResponse>(`/api/property/${propertyId}`);
+}
+
+export async function getPropertyMatch(
+  propertyId: string,
+  userId: string,
+): Promise<PropertyMatchResponse> {
+  return apiRequest<PropertyMatchResponse>(`/api/property/${propertyId}/match`, {
+    headers: { "X-User-Id": userId },
+  });
 }
 
 export async function getBedroomsByPropertyId(propertyId: string): Promise<BedroomsDetailResponse> {

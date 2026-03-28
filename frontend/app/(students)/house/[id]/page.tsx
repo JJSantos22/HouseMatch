@@ -16,17 +16,22 @@ import {
 } from "lucide-react";
 import {
   getBedroomsByPropertyId,
+  getPropertyMatch,
   type BedroomResponse,
+  type PropertyMatchResponse,
+  type PropertyMatchReasonResponse,
   type PropertyResponse,
 } from "@/lib/api/property";
 import { addFavorite, removeFavorite } from "@/lib/api/favorites";
 import { ApiError } from "@/lib/api/client";
+import CircularProgress from "@/components/customized/progress/progress-07";
 import { useAuthStore } from "@/lib/auth/store";
 import { Button } from "@/components/ui/button";
 import { BedroomAmenityBadges } from "@/components/BedroomAmenityBadges";
 import { PropertyAmenityBadges } from "@/components/PropertyAmenityBadges";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -41,6 +46,7 @@ import {
   ItemHeader,
   ItemTitle,
   ItemFooter,
+  ItemActions,
 } from "@/components/ui/item";
 
 type PropertyReview = {
@@ -65,6 +71,16 @@ const FALLBACK_IMAGES = [
 function formatDate(value: string) {
   const parsed = new Date(value);
   return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString();
+}
+
+function formatTrait(value: string) {
+  return value
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function normalizeScore(value: number) {
+  return Math.max(0, Math.min(100, value));
 }
 
 function getMockReviews(
@@ -101,12 +117,14 @@ export default function HouseDetailsPage() {
   const params = useParams<{ id: string }>();
   const propertyId = params?.id;
   const userId = useAuthStore((state) => state.session?.userId);
-
+  const isHydrated = useAuthStore((state) => state.isHydrated);
   const [isLoading, setIsLoading] = useState(true);
   const [favoritedIds, setFavoritedIds] = useState<Set<string>>(new Set());
   const [poppingId, setPoppingId] = useState<string | null>(null);
   const [property, setProperty] = useState<PropertyResponse | null>(null);
   const [bedrooms, setBedrooms] = useState<BedroomResponse[]>([]);
+  const [propertyMatch, setPropertyMatch] =
+    useState<PropertyMatchResponse | null>(null);
   const [reviews, setReviews] = useState<PropertyReview[]>([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
@@ -119,13 +137,26 @@ export default function HouseDetailsPage() {
         return;
       }
 
+      if (!isHydrated) {
+        return;
+      }
+
       try {
         setIsLoading(true);
 
-        const detailsData = await getBedroomsByPropertyId(propertyId);
+        const detailsPromise = getBedroomsByPropertyId(propertyId);
+        const matchPromise: Promise<PropertyMatchResponse | null> = userId
+          ? getPropertyMatch(propertyId, userId)
+          : Promise.resolve(null);
+
+        const [detailsData, matchData] = await Promise.all([
+          detailsPromise,
+          matchPromise,
+        ]);
 
         setProperty(detailsData.property);
         setBedrooms(detailsData.bedrooms);
+        setPropertyMatch(matchData);
         setReviews(getMockReviews(propertyId, detailsData.property.title));
       } catch (error) {
         console.error("Failed to load house details:", error);
@@ -136,7 +167,12 @@ export default function HouseDetailsPage() {
     }
 
     loadHouseDetails();
-  }, [propertyId]);
+  }, [propertyId, userId, isHydrated]);
+
+  const matchReasoning = useMemo<PropertyMatchReasonResponse[]>(
+    () => propertyMatch?.reasoning.slice(0, 18) ?? [],
+    [propertyMatch],
+  );
 
   const galleryImages = useMemo<GalleryImage[]>(() => {
     const images: GalleryImage[] = [];
@@ -381,24 +417,35 @@ export default function HouseDetailsPage() {
                 <MapPin className="h-4 w-4" />
                 <span>{property.address}</span>
               </CardDescription>
+              <CardAction>
+                {propertyMatch ? (
+                  <CircularProgress
+                    value={normalizeScore(propertyMatch.score)}
+                    size={62}
+                    showLabel
+                    renderLabel={(value) => `${value}%`}
+                    labelClassName="text-[11px] font-semibold"
+                  />
+                ) : null}
+              </CardAction>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-lg font-semibold">
-                {bedroomPriceRange !== null
-                  ? bedroomPriceRange.min === bedroomPriceRange.max
-                    ? (
-                        <>
-                          €{bedroomPriceRange.min}
-                          <span className="text-muted-foreground">/month</span>
-                        </>
-                      )
-                    : (
-                        <>
-                          €{bedroomPriceRange.min} - {bedroomPriceRange.max}
-                          <span className="text-muted-foreground">/month</span>
-                        </>
-                      )
-                  : "Price on request"}
+                {bedroomPriceRange !== null ? (
+                  bedroomPriceRange.min === bedroomPriceRange.max ? (
+                    <>
+                      €{bedroomPriceRange.min}
+                      <span className="text-muted-foreground">/month</span>
+                    </>
+                  ) : (
+                    <>
+                      €{bedroomPriceRange.min} - {bedroomPriceRange.max}
+                      <span className="text-muted-foreground">/month</span>
+                    </>
+                  )
+                ) : (
+                  "Price on request"
+                )}
               </div>
 
               <PropertyAmenityBadges property={property} showOverview />
@@ -448,6 +495,45 @@ export default function HouseDetailsPage() {
                   </ItemFooter>
                 </Item>
               ))}
+            </ItemGroup>
+          )}
+        </section>
+        
+        <section className="mt-6">
+          <h2 className="text-lg font-semibold">Match by Category</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            {propertyMatch
+              ? "Trait-by-trait compatibility breakdown"
+              : userId
+                ? "No match score available for this property right now."
+                : "Sign in to view your match score for this property."}
+          </p>
+          {matchReasoning.length === 0 ? (
+            <FieldDescription className="mt-3">
+              Trait-by-trait breakdown will appear here when available.
+            </FieldDescription>
+          ) : (
+            <ItemGroup className="grid grid-cols-2">
+              {matchReasoning.map((reason) => {
+                const categoryScore = normalizeScore(reason.score);
+
+                return (
+                  <Item key={reason.trait} size="xs">
+                    <ItemContent>
+                      <ItemTitle>{formatTrait(reason.trait)}</ItemTitle>
+                    </ItemContent>
+                    <ItemActions>
+                      <CircularProgress
+                        value={categoryScore}
+                        size={34}
+                        showLabel
+                        renderLabel={() => `${categoryScore}`}
+                        labelClassName="text-[9px] font-semibold"
+                      />
+                    </ItemActions>
+                  </Item>
+                );
+              })}
             </ItemGroup>
           )}
         </section>
