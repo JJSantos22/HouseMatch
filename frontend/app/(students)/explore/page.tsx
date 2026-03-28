@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { FieldDescription } from "@/components/ui/field";
 import { useAuthStore } from "@/lib/auth/store";
@@ -13,12 +14,12 @@ import {
   getBedroomDetail,
   type PropertyMapResponse,
   type BedroomDetailResponse,
-  type BedroomMapResponse,
 } from "@/lib/api/property";
 import { addFavorite } from "@/lib/api/favorites";
 import { ApiError } from "@/lib/api/client";
 
 export default function ExplorePage() {
+  const router = useRouter();
   const isHydrated = useAuthStore((state) => state.isHydrated);
   const userId = useAuthStore((state) => state.session?.userId);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
@@ -132,22 +133,6 @@ export default function ExplorePage() {
     setSelectedBedroomId(bedroomId);
   };
 
-  const handleDiscard = () => {
-    if (isSmartSuggestionMode) {
-      handleNextSuggestion();
-    } else {
-      setSelectedPropertyId(null);
-    }
-  };
-
-  const handleSkip = () => {
-    if (isSmartSuggestionMode) {
-      handleNextSuggestion();
-    } else {
-      setSelectedPropertyId(null);
-    }
-  };
-
   const handleMatch = async () => {
     if (userId && selectedBedroomId) {
       try {
@@ -251,13 +236,12 @@ export default function ExplorePage() {
             <BedroomDetailsCard
               bedroom={selectedBedroom.bedroom}
               property={selectedBedroom.property}
-              onDiscard={handleDiscard}
-              onSkip={handleSkip}
               onMatch={handleMatch}
               onClose={handleClose}
               onExitSmartSuggestion={
                 isSmartSuggestionMode ? handleExitSmartSuggestions : undefined
               }
+              onOpenDetails={() => router.push(`/house/${selectedProperty.id}`)}
             />
             {selectedProperty.bedrooms.length > 1 && !isMobile && (
               <BedroomList

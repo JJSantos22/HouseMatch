@@ -26,8 +26,6 @@ import {
   Users,
   Clock3,
   Maximize2,
-  X,
-  SkipForward,
   Heart,
   ArrowDown,
   Sofa,
@@ -55,21 +53,19 @@ const MOCK_IMAGES = [
 interface BedroomDetailsCardProps {
   bedroom: BedroomResponse;
   property: PropertyResponse;
-  onDiscard: () => void;
-  onSkip: () => void;
   onMatch: () => void;
   onClose?: () => void;
   onExitSmartSuggestion?: () => void;
+  onOpenDetails?: () => void;
 }
 
 export function BedroomDetailsCard({
   bedroom,
   property,
-  onDiscard,
-  onSkip,
   onMatch,
   onClose,
   onExitSmartSuggestion,
+  onOpenDetails,
 }: BedroomDetailsCardProps) {
   // Use bedroom photos if available, fallback to property photos, then mock images
   const images =
@@ -86,8 +82,39 @@ export function BedroomDetailsCard({
     return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString();
   };
 
+  const handleCardClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!onOpenDetails) {
+      return;
+    }
+
+    const target = event.target as HTMLElement;
+    if (target.closest("button, a, input, textarea, select, [role='button']")) {
+      return;
+    }
+
+    onOpenDetails();
+  };
+
+  const handleCardKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!onOpenDetails) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onOpenDetails();
+    }
+  };
+
   return (
-    <Card className="relative flex w-full min-w-[320px] max-h-[66vh] flex-col overflow-hidden shadow-lg md:max-h-[90vh] md:w-100 md:shrink-0 pt-0">
+    <Card
+      className={`relative flex w-full min-w-[320px] max-h-[66vh] flex-col overflow-hidden shadow-lg md:max-h-[90vh] md:w-100 md:shrink-0 pt-0 ${onOpenDetails ? "cursor-pointer" : ""}`}
+      onClick={handleCardClick}
+      onKeyDown={handleCardKeyDown}
+      tabIndex={onOpenDetails ? 0 : -1}
+      role={onOpenDetails ? "button" : undefined}
+      aria-label={onOpenDetails ? "Open house details" : undefined}
+    >
       <ImageGallery images={images} onClose={onClose} />
 
       <CardHeader>
@@ -219,7 +246,10 @@ export function BedroomDetailsCard({
                 className="flex items-center gap-1.5 py-2"
               >
                 <WashingMachine className="h-4 w-4" />
-                <span className="text-xs">Laundry: {LAUNDRY_LABELS[property.laundry] ?? property.laundry}</span>
+                <span className="text-xs">
+                  Laundry:{" "}
+                  {LAUNDRY_LABELS[property.laundry] ?? property.laundry}
+                </span>
               </Badge>
               <Badge
                 variant="secondary"
@@ -244,7 +274,6 @@ export function BedroomDetailsCard({
 
       <CardFooter className="justify-center gap-2">
         <TooltipProvider>
-
           {onExitSmartSuggestion && (
             <Tooltip>
               <TooltipTrigger asChild>
