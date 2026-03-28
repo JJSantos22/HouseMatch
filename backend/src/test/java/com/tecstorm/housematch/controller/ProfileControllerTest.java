@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.tecstorm.housematch.service.ProfileService;
+import com.tecstorm.housematch.service.SearchPreferenceService;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
@@ -14,7 +15,10 @@ class ProfileControllerTest {
     @Test
     void rebuildsProfileEmbedding() throws Exception {
         ProfileService profileService = org.mockito.Mockito.mock(ProfileService.class);
-        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(new ProfileController(profileService)).build();
+        SearchPreferenceService searchPreferenceService = org.mockito.Mockito.mock(SearchPreferenceService.class);
+        MockMvc mockMvc = MockMvcBuilders.standaloneSetup(
+            new ProfileController(profileService, searchPreferenceService)
+        ).build();
 
         UUID userId = UUID.randomUUID();
 

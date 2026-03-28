@@ -17,6 +17,7 @@ import com.tecstorm.housematch.service.BedroomMatchingService;
 import com.tecstorm.housematch.service.BedroomService;
 import com.tecstorm.housematch.service.PropertyService;
 import com.tecstorm.housematch.service.PropertyTraitService;
+import com.tecstorm.housematch.service.ReviewService;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -30,9 +31,10 @@ class PropertyControllerTest {
     void returnsRankedMatches() throws Exception {
         PropertyService propertyService = org.mockito.Mockito.mock(PropertyService.class);
         BedroomService bedroomService = org.mockito.Mockito.mock(BedroomService.class);
+        ReviewService reviewService = org.mockito.Mockito.mock(ReviewService.class);
         BedroomMatchingService bedroomMatchingService = org.mockito.Mockito.mock(BedroomMatchingService.class);
         PropertyTraitService propertyTraitService = org.mockito.Mockito.mock(PropertyTraitService.class);
-        MockMvc mockMvc = mockMvc(propertyService, bedroomService, bedroomMatchingService, propertyTraitService);
+        MockMvc mockMvc = mockMvc(propertyService, bedroomService, reviewService, bedroomMatchingService, propertyTraitService);
 
         UUID studentId = UUID.randomUUID();
         when(bedroomMatchingService.getMatchesByStudentId(studentId)).thenReturn(new BedroomMatchesResponse(List.of(
@@ -54,9 +56,10 @@ class PropertyControllerTest {
     void returnsPropertyTraits() throws Exception {
         PropertyService propertyService = org.mockito.Mockito.mock(PropertyService.class);
         BedroomService bedroomService = org.mockito.Mockito.mock(BedroomService.class);
+        ReviewService reviewService = org.mockito.Mockito.mock(ReviewService.class);
         BedroomMatchingService bedroomMatchingService = org.mockito.Mockito.mock(BedroomMatchingService.class);
         PropertyTraitService propertyTraitService = org.mockito.Mockito.mock(PropertyTraitService.class);
-        MockMvc mockMvc = mockMvc(propertyService, bedroomService, bedroomMatchingService, propertyTraitService);
+        MockMvc mockMvc = mockMvc(propertyService, bedroomService, reviewService, bedroomMatchingService, propertyTraitService);
 
         UUID propertyId = UUID.randomUUID();
         when(propertyTraitService.get(propertyId)).thenReturn(new PropertyTraitsResponse(
@@ -78,9 +81,10 @@ class PropertyControllerTest {
     void updatesPropertyTraits() throws Exception {
         PropertyService propertyService = org.mockito.Mockito.mock(PropertyService.class);
         BedroomService bedroomService = org.mockito.Mockito.mock(BedroomService.class);
+        ReviewService reviewService = org.mockito.Mockito.mock(ReviewService.class);
         BedroomMatchingService bedroomMatchingService = org.mockito.Mockito.mock(BedroomMatchingService.class);
         PropertyTraitService propertyTraitService = org.mockito.Mockito.mock(PropertyTraitService.class);
-        MockMvc mockMvc = mockMvc(propertyService, bedroomService, bedroomMatchingService, propertyTraitService);
+        MockMvc mockMvc = mockMvc(propertyService, bedroomService, reviewService, bedroomMatchingService, propertyTraitService);
 
         UUID propertyId = UUID.randomUUID();
 
@@ -103,9 +107,10 @@ class PropertyControllerTest {
     void rebuildsPropertyEmbedding() throws Exception {
         PropertyService propertyService = org.mockito.Mockito.mock(PropertyService.class);
         BedroomService bedroomService = org.mockito.Mockito.mock(BedroomService.class);
+        ReviewService reviewService = org.mockito.Mockito.mock(ReviewService.class);
         BedroomMatchingService bedroomMatchingService = org.mockito.Mockito.mock(BedroomMatchingService.class);
         PropertyTraitService propertyTraitService = org.mockito.Mockito.mock(PropertyTraitService.class);
-        MockMvc mockMvc = mockMvc(propertyService, bedroomService, bedroomMatchingService, propertyTraitService);
+        MockMvc mockMvc = mockMvc(propertyService, bedroomService, reviewService, bedroomMatchingService, propertyTraitService);
 
         UUID propertyId = UUID.randomUUID();
 
@@ -116,11 +121,12 @@ class PropertyControllerTest {
     private MockMvc mockMvc(
         PropertyService propertyService,
         BedroomService bedroomService,
+        ReviewService reviewService,
         BedroomMatchingService bedroomMatchingService,
         PropertyTraitService propertyTraitService
     ) {
         return MockMvcBuilders.standaloneSetup(
-                new PropertyController(propertyService, bedroomService, bedroomMatchingService, propertyTraitService))
+                new PropertyController(propertyService, bedroomService, reviewService, bedroomMatchingService, propertyTraitService))
             .build();
     }
 }
