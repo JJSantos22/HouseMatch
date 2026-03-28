@@ -15,12 +15,14 @@ public class ProfileService {
     private final StudentService studentService;
     private final LandlordService landlordService;
     private final PersonalityTraitService personalityTraitService;
+    private final ReviewService reviewService;
 
-    public ProfileService(ProfileRepository profileRepository, StudentService studentService, LandlordService landlordService, PersonalityTraitService personalityTraitService) {
+    public ProfileService(ProfileRepository profileRepository, StudentService studentService, LandlordService landlordService, PersonalityTraitService personalityTraitService, ReviewService reviewService) {
         this.profileRepository = profileRepository;
         this.studentService = studentService;
         this.landlordService = landlordService;
         this.personalityTraitService = personalityTraitService;
+        this.reviewService = reviewService;
     }
 
     public ProfileResponse getProfile(UUID userId) {
@@ -30,10 +32,11 @@ public class ProfileService {
         if (profile.getRole() == UserRole.student) {
             var studentEntity = studentService.get(userId);
             var traits = personalityTraitService.get(studentEntity.getId());
-            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), studentEntity.getUniversity(), null, profile.getEmail(), traits);
+            var reviews = reviewService.getByStudentId(studentEntity.getId());
+            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), studentEntity.getUniversity(), null, profile.getEmail(), traits, reviews);
         } else {
             var landlordEntity = landlordService.get(userId);
-            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), null, landlordEntity.getPhone(), profile.getEmail(), null);
+            return new ProfileResponse(profile.getId(), profile.getName(), profile.getRole(), null, landlordEntity.getPhone(), profile.getEmail(), null, null);
         }
     }
 

@@ -280,6 +280,26 @@
             "method": "GET",
             "header": [],
             "url": {
+              "raw": "{{baseUrl}}/api/property/{{propertyId}}/review",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "{{propertyId}}",
+                "review"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Reviews",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
               "raw": "{{baseUrl}}/property/{{propertyId}}/review",
               "host": [
                 "{{baseUrl}}"

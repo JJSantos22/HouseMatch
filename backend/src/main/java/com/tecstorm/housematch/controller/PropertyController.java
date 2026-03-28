@@ -4,8 +4,10 @@ import com.tecstorm.housematch.dto.BedroomDetailResponse;
 import com.tecstorm.housematch.dto.BedroomsDetailResponse;
 import com.tecstorm.housematch.dto.PropertyMapResponse;
 import com.tecstorm.housematch.dto.PropertyResponse;
+import com.tecstorm.housematch.dto.ReviewResponse;
 import com.tecstorm.housematch.service.BedroomService;
 import com.tecstorm.housematch.service.PropertyService;
+import com.tecstorm.housematch.service.ReviewService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -17,10 +19,12 @@ public class PropertyController {
 
     private final PropertyService propertyService;
     private final BedroomService bedroomService;
+    private final ReviewService reviewService;
 
-    public PropertyController(PropertyService propertyService, BedroomService bedroomService) {
+    public PropertyController(PropertyService propertyService, BedroomService bedroomService, ReviewService reviewService) {
         this.propertyService = propertyService;
         this.bedroomService = bedroomService;
+        this.reviewService = reviewService;
     }
 
     @GetMapping("/map")
@@ -45,5 +49,11 @@ public class PropertyController {
     public ResponseEntity<BedroomsDetailResponse> getBedroomsByPropertyId(
             @PathVariable UUID propertyId) {
         return ResponseEntity.ok(bedroomService.getByPropertyId(propertyId));
+    }
+
+    @GetMapping("/{propertyId}/review")
+    public ResponseEntity<List<ReviewResponse>> getReviewsByPropertyId(
+            @PathVariable UUID propertyId) {
+        return ResponseEntity.ok(reviewService.getByPropertyId(propertyId));
     }
 }
