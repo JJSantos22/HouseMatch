@@ -15,3 +15,8 @@
 /.idea/vcs.xml
 /frontend/.idea/vcs.xml
 /frontend/.idea/workspace.xml
+/frontend/supabase/.branches/_current_branch
+/supabase/.branches/_current_branch
+/frontend/supabase/.temp/cli-latest
+/supabase/.temp/cli-latest
+/.idea/dataSources.xml
