@@ -21,7 +21,7 @@ public class ReviewEntity {
     private StudentEntity student;
 
     @Column(name = "rating", nullable = false)
-    private Integer rating;
+    private Double rating;
 
     @Column(name = "comment")
     private String comment;
