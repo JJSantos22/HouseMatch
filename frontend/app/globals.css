@@ -124,3 +124,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes progress {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    filter: drop-shadow(0 0 4px #39FF14);
+  }
+  50% {
+    opacity: 1;
+    filter: drop-shadow(0 0 12px #39FF14);
+  }
+}

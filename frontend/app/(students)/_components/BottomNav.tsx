@@ -32,10 +32,12 @@ export function BottomNav({ destinations }: BottomNavProps) {
                 onClick={destination.onClick}
                 className="-mt-8 flex flex-col items-center"
               >
-                <div className="flex size-14 items-center justify-center rounded-full bg-primary shadow-lg">
-                  <Icon className="size-6 text-primary-foreground" />
+                <div className="relative">
+                  <div className="flex size-14 items-center justify-center rounded-full bg-primary shadow-lg">
+                    <Icon className="size-6 text-primary-foreground" />
+                  </div>
                 </div>
-                <span className="mt-1 text-xs text-muted-foreground">{destination.displayName}</span>
+                <span className={cn("mt-1 text-xs", destination.active ? "text-foreground font-semibold" : "text-muted-foreground")}>{destination.displayName}</span>
               </button>
             );
           }
@@ -46,8 +48,8 @@ export function BottomNav({ destinations }: BottomNavProps) {
               onClick={destination.onClick}
               className="flex flex-col items-center justify-center gap-1 px-3 py-2"
             >
-              <Icon className={cn("size-6", destination.active ? "text-primary" : "text-muted-foreground")} />
-              <span className={cn("text-xs", destination.active ? "text-primary" : "text-muted-foreground")}>
+              <Icon className={cn("size-6", destination.active ? "text-foreground" : "text-muted-foreground")} />
+              <span className={cn("text-xs", destination.active ? "text-foreground font-semibold" : "text-muted-foreground")}>
                 {destination.displayName}
               </span>
             </button>
