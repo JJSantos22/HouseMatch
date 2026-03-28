@@ -17,12 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  MapPin,
-  Euro,
-  Heart,
-  ArrowDown,
-} from "lucide-react";
+import { MapPin, Euro, Heart, ArrowDown } from "lucide-react";
 import type { BedroomResponse, PropertyResponse } from "@/lib/api/property";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { BedroomAmenityBadges } from "@/components/BedroomAmenityBadges";
@@ -69,11 +64,6 @@ export function BedroomDetailsCard({
       return;
     }
 
-    const target = event.target as HTMLElement;
-    if (target.closest("button, a, input, textarea, select, [role='button']")) {
-      return;
-    }
-
     onOpenDetails();
   };
 
@@ -92,7 +82,6 @@ export function BedroomDetailsCard({
     <Card
       className={`relative flex w-full min-w-[320px] max-h-[66vh] flex-col overflow-hidden shadow-lg md:max-h-[90vh] md:w-100 md:shrink-0 pt-0 ${onOpenDetails ? "cursor-pointer" : ""}`}
       onClick={handleCardClick}
-      onKeyDown={handleCardKeyDown}
       tabIndex={onOpenDetails ? 0 : -1}
       role={onOpenDetails ? "button" : undefined}
       aria-label={onOpenDetails ? "Open house details" : undefined}
@@ -119,7 +108,7 @@ export function BedroomDetailsCard({
       </CardHeader>
 
       <ScrollArea>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4" onKeyDown={handleCardKeyDown}>
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold">Availability</h3>
             <p className="text-xs text-muted-foreground">
