@@ -149,7 +149,7 @@ export function ProfileForm({
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
+        <CardTitle className="text-primary">{title}</CardTitle>
         {description && <FieldDescription>{description}</FieldDescription>}
       </CardHeader>
       <CardContent>
@@ -246,7 +246,7 @@ export function ProfileForm({
 
               {/* Personality Traits - 2x3 Grid */}
               <FieldSet>
-                <FieldLegend>Preferences</FieldLegend>
+                <FieldLegend className="text-primary">Define Your Personality</FieldLegend>
                 <FieldGroup className="grid grid-cols-1 md:grid-cols-2">
                   <Field>
                     <FieldLabel
@@ -416,7 +416,7 @@ export function ProfileForm({
 
               <Accordion type="single" collapsible>
                 <AccordionItem value="advanced-preferences">
-                  <AccordionTrigger>Advanced Preferences</AccordionTrigger>
+                  <AccordionTrigger className="text-primary">Weight Your Personality Traits</AccordionTrigger>
                   <AccordionContent>
                     <div className="space-y-4 pt-1">
                       <FieldDescription>
