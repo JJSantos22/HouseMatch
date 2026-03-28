@@ -74,4 +74,41 @@ class CompatibilityScorerTest {
         assertEquals(0, result.score());
         assertEquals(0, result.totalPoints());
     }
+
+    @Test
+    void distanceImpactsScoreWhenProvided() {
+        MatchInput input = new MatchInput(
+            MatchInput.Schedule.BALANCED,
+            MatchInput.Social.AMBIVERT,
+            MatchInput.Preference.MEDIUM,
+            MatchInput.Academic.BALANCED,
+            MatchInput.Cleanliness.MODERATE,
+            MatchInput.Preference.MEDIUM
+        );
+
+        MatchResult near = scorer.score(input, input, 0.8d);
+        MatchResult far = scorer.score(input, input, 20.0d);
+
+        assertEquals(100, near.score());
+        assertEquals(89, far.score());
+    }
+
+    @Test
+    void nullDistanceIsNeutral() {
+        MatchInput input = new MatchInput(
+            MatchInput.Schedule.BALANCED,
+            MatchInput.Social.AMBIVERT,
+            MatchInput.Preference.MEDIUM,
+            MatchInput.Academic.BALANCED,
+            MatchInput.Cleanliness.MODERATE,
+            MatchInput.Preference.MEDIUM
+        );
+
+        MatchResult withoutDistance = scorer.score(input, input);
+        MatchResult withNullDistance = scorer.score(input, input, null);
+
+        assertEquals(withoutDistance.score(), withNullDistance.score());
+        assertEquals(withoutDistance.totalPoints(), withNullDistance.totalPoints());
+        assertEquals(withoutDistance.maxPoints(), withNullDistance.maxPoints());
+    }
 }

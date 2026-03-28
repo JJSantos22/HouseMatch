@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.when;
@@ -133,6 +134,61 @@ class BedroomMatchingServiceTest {
         assertEquals("BALANCED", response.reasoning().getFirst().propertyValue());
     }
 
+    @Test
+    void distanceImpactsRankingWhenTraitsAreEqual() {
+        BedroomRepository bedroomRepository = Mockito.mock(BedroomRepository.class);
+        PropertyRepository propertyRepository = Mockito.mock(PropertyRepository.class);
+        StudentService studentService = Mockito.mock(StudentService.class);
+        PersonalityTraitService personalityTraitService = Mockito.mock(PersonalityTraitService.class);
+        PropertyTraitService propertyTraitService = Mockito.mock(PropertyTraitService.class);
+
+        MatchInput input = new MatchInput(
+            MatchInput.Schedule.BALANCED,
+            MatchInput.Social.AMBIVERT,
+            MatchInput.Preference.MEDIUM,
+            MatchInput.Academic.BALANCED,
+            MatchInput.Cleanliness.MODERATE,
+            MatchInput.Preference.MEDIUM
+        );
+
+        StudentEntity student = Mockito.mock(StudentEntity.class);
+        when(student.getId()).thenReturn(UUID.randomUUID());
+        when(student.getUniversity()).thenReturn("University of Lisbon");
+        when(studentService.get(Mockito.any())).thenReturn(student);
+        when(personalityTraitService.getMatchInput(Mockito.any())).thenReturn(input);
+
+        BedroomEntity closeBedroom = bedroom(
+            UUID.randomUUID(),
+            "Close Bedroom",
+            true,
+            property(UUID.randomUUID(), "Close Property", 38.7527, -9.1567)
+        );
+        BedroomEntity farBedroom = bedroom(
+            UUID.randomUUID(),
+            "Far Bedroom",
+            true,
+            property(UUID.randomUUID(), "Far Property", 41.1779, -8.5950)
+        );
+
+        when(bedroomRepository.findAll()).thenReturn(List.of(farBedroom, closeBedroom));
+        when(propertyTraitService.getMatchInput(closeBedroom.getProperty().getId())).thenReturn(input);
+        when(propertyTraitService.getMatchInput(farBedroom.getProperty().getId())).thenReturn(input);
+
+        BedroomMatchingService service = new BedroomMatchingService(
+            bedroomRepository,
+            studentService,
+            personalityTraitService,
+            propertyTraitService,
+            propertyRepository
+        );
+
+        BedroomMatchesResponse response = service.getMatchesByProfileId(UUID.randomUUID());
+
+        assertEquals("Close Bedroom", response.matches().getFirst().bedroom().title());
+        assertTrue(response.matches().getFirst().score() > response.matches().get(1).score());
+        assertTrue(response.matches().getFirst().breakdown().stream().anyMatch(item -> "distance".equals(item.trait())));
+    }
+
     private static BedroomEntity bedroom(UUID id, String title, boolean isActive, PropertyEntity property) {
         try {
             BedroomEntity entity = new BedroomEntity(property, title, 1, 1, 500, LocalDate.now(), LocalDate.now().plusMonths(6), 3);
@@ -145,8 +201,12 @@ class BedroomMatchingServiceTest {
     }
 
     private static PropertyEntity property(UUID id, String title) {
+        return property(id, title, 0.0, 0.0);
+    }
+
+    private static PropertyEntity property(UUID id, String title, double lat, double lng) {
         try {
-            PropertyEntity entity = new PropertyEntity(title, "Address", 0.0, 0.0, 1);
+            PropertyEntity entity = new PropertyEntity(title, "Address", lat, lng, 1);
             setField(entity, "id", id);
             setField(entity, "totalPeople", 1);
             setField(entity, "totalBedrooms", 1);

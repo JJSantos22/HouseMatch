@@ -17,4 +17,20 @@ final class TraitCompatibilityRules {
         }
         return 0;
     }
+
+    static int scoreDistanceKm(double distanceKm, int weight) {
+        if (distanceKm <= 1.0d) {
+            return weight;
+        }
+        if (distanceKm <= 3.0d) {
+            return Math.round(weight * 0.8f);
+        }
+        if (distanceKm <= 7.0d) {
+            return Math.round(weight * 0.6f);
+        }
+        if (distanceKm <= 12.0d) {
+            return Math.round(weight * 0.35f);
+        }
+        return Math.round(weight * 0.1f);
+    }
 }

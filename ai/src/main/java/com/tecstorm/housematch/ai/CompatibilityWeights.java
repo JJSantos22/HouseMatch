@@ -6,9 +6,10 @@ public record CompatibilityWeights(
     int noise,
     int academic,
     int cleanliness,
-    int guestFrequency
+    int guestFrequency,
+    int distance
 ) {
     public static CompatibilityWeights defaults() {
-        return new CompatibilityWeights(15, 20, 15, 10, 20, 20);
+        return new CompatibilityWeights(15, 20, 15, 10, 10, 10, 20);
     }
 }

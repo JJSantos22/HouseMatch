@@ -13,6 +13,7 @@ import com.tecstorm.housematch.ai.CompatibilityScorer;
 import com.tecstorm.housematch.ai.MatchResult;
 import com.tecstorm.housematch.matching.api.dto.BedroomMatchResponse;
 import com.tecstorm.housematch.matching.api.dto.BedroomMatchesResponse;
+import com.tecstorm.housematch.matching.domain.UniversityDistanceCalculator;
 import com.tecstorm.housematch.property.api.dto.BedroomResponse;
 import com.tecstorm.housematch.matching.api.dto.PropertyMatchReasonResponse;
 import com.tecstorm.housematch.matching.api.dto.PropertyMatchResponse;
@@ -52,12 +53,23 @@ public class BedroomMatchingService {
 
     @Transactional(readOnly = true)
     public BedroomMatchesResponse getMatchesByProfileId(UUID profileId) {
-        UUID studentId = studentService.get(profileId).getId();
+        var student = studentService.get(profileId);
+        UUID studentId = student.getId();
         var studentInput = personalityTraitService.getMatchInput(studentId);
+        String universityName = student.getUniversity();
 
         List<BedroomMatchResponse> matches = bedroomRepository.findAll().stream()
             .filter(bedroom -> Boolean.TRUE.equals(bedroom.getIsActive()))
-            .map(bedroom -> toMatchResponse(bedroom, compatibilityScorer.score(studentInput, propertyTraitService.getMatchInput(bedroom.getProperty().getId()))))
+            .map(bedroom -> {
+                var property = bedroom.getProperty();
+                Double distanceKm = UniversityDistanceCalculator.distanceKm(universityName, property.getLat(), property.getLng());
+                MatchResult result = compatibilityScorer.score(
+                    studentInput,
+                    propertyTraitService.getMatchInput(property.getId()),
+                    distanceKm
+                );
+                return toMatchResponse(bedroom, result);
+            })
             .sorted(Comparator.comparing(BedroomMatchResponse::score).reversed())
             .toList();
 
@@ -66,13 +78,15 @@ public class BedroomMatchingService {
 
     @Transactional(readOnly = true)
     public PropertyMatchResponse getPropertyMatch(UUID propertyId, UUID profileId) {
-        UUID studentId = studentService.get(profileId).getId();
+        var student = studentService.get(profileId);
+        UUID studentId = student.getId();
         PropertyEntity property = propertyRepository.findById(propertyId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
         var studentInput = personalityTraitService.getMatchInput(studentId);
         var propertyInput = propertyTraitService.getMatchInput(propertyId);
-        return toPropertyMatchResponse(property, compatibilityScorer.score(studentInput, propertyInput));
+        Double distanceKm = UniversityDistanceCalculator.distanceKm(student.getUniversity(), property.getLat(), property.getLng());
+        return toPropertyMatchResponse(property, compatibilityScorer.score(studentInput, propertyInput, distanceKm));
     }
 
     private BedroomMatchResponse toMatchResponse(BedroomEntity bedroom, MatchResult result) {
