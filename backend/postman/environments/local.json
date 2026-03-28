@@ -13,12 +13,6 @@
       "value": "",
       "enabled": true,
       "type": "default"
-    },
-    {
-      "key": "propertyId",
-      "value": "",
-      "enabled": true,
-      "type": "default"
     }
   ],
   "_postman_variable_scope": "environment"

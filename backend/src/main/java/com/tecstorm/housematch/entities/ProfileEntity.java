@@ -29,6 +29,11 @@ public class ProfileEntity {
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = OffsetDateTime.now();
+    }
+
     protected ProfileEntity() {}
 
     public ProfileEntity(String email, String password, UserRole role) {

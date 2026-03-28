@@ -1,70 +1,98 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import Map, { Marker, NavigationControl } from "react-map-gl/maplibre";
+import { useEffect, useRef } from "react";
+import Map, {
+  Marker,
+  NavigationControl,
+  MapRef,
+  AttributionControl,
+} from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
+import type { PropertyMapResponse } from "@/lib/api/property";
 
-export interface Room {
-  id: string;
-  price: number;
-  score: number;
-  latitude: number;
-  longitude: number;
+export interface MapPadding {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
 }
 
 interface RoomsMapProps {
-  rooms: Room[];
-  onSelectRoom?: (id: string) => void;
+  properties: PropertyMapResponse[];
+  selectedPropertyId: string | null;
+  onSelectProperty: (id: string) => void;
+  padding?: MapPadding;
+  hideControls?: boolean;
 }
 
-export function RoomsMap({ rooms, onSelectRoom }: RoomsMapProps) {
-  const [selectedRoomId, setSelectedRoomId] = useState<string | null>(null);
+function getPriceRange(property: PropertyMapResponse): string {
+  const prices = property.bedrooms.map((b) => b.price);
+  const min = Math.min(...prices);
+  const max = Math.max(...prices);
+  return min === max ? `${min}€` : `${min}€ - ${max}€`;
+}
 
-  const handleMarkerClick = useCallback(
-    (roomId: string) => {
-      setSelectedRoomId(roomId);
-      onSelectRoom?.(roomId);
-    },
-    [onSelectRoom],
-  );
+export function RoomsMap({
+  properties,
+  selectedPropertyId,
+  onSelectProperty,
+  padding,
+  hideControls = false,
+}: RoomsMapProps) {
+  const mapRef = useRef<MapRef>(null);
+
+  useEffect(() => {
+    if (selectedPropertyId) {
+      const property = properties.find((p) => p.id === selectedPropertyId);
+      if (property && mapRef.current) {
+        mapRef.current.flyTo({
+          center: [property.lng, property.lat],
+          zoom: 14,
+          duration: 1000,
+          padding: padding,
+        });
+      }
+    } else {
+      if (mapRef.current) {
+        mapRef.current.flyTo({
+          padding: padding,
+        });
+      }
+    }
+  }, [selectedPropertyId, properties, padding]);
 
   return (
-    <div className="relative w-full overflow-hidden">
-      <Map
-        initialViewState={{
-          longitude: -9.1393,
-          latitude: 38.7223,
-          zoom: 12,
-        }}
-        style={{ width: "100%", height: "100%" }}
-        mapStyle="/map-style.json"
-      >
-        <NavigationControl position="top-right" />
+    <Map
+      ref={mapRef}
+      initialViewState={{
+        longitude: -9.1393,
+        latitude: 38.7223,
+        zoom: 12,
+      }}
+      style={{ width: "100%", height: "100%" }}
+      mapStyle="/map-style.json"
+      attributionControl={false}
+    >
+      {!hideControls && <NavigationControl position="top-right" />}
+      {!hideControls && <AttributionControl position="bottom-left" />}
 
-        {rooms.map((room) => (
-          <Marker
-            key={room.id}
-            longitude={room.longitude}
-            latitude={room.latitude}
-            anchor="bottom"
-            onClick={() => handleMarkerClick(room.id)}
+      {properties.map((property) => (
+        <Marker
+          key={property.id}
+          longitude={property.lng}
+          latitude={property.lat}
+          anchor="bottom"
+          onClick={() => onSelectProperty(property.id)}
+        >
+          <Badge
+            variant={selectedPropertyId === property.id ? "default" : "secondary"}
+            className="shadow-sm cursor-pointer"
           >
-            <Badge
-              variant={selectedRoomId === room.id ? "default" : "secondary"}
-              className="shadow-sm"
-              asChild
-            >
-              <a>
-                {room.score * 10}%
-                <Separator orientation="vertical" />
-                {room.price}€
-              </a>
-            </Badge>
-          </Marker>
-        ))}
-      </Map>
-    </div>
+            {getPriceRange(property)}
+          </Badge>
+        </Marker>
+      ))}
+    </Map>
   );
 }

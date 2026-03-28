@@ -77,7 +77,7 @@ export default function StudentsLayout({
       <TopBar />
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">{children}</main>
+      <main className="relative flex-1 overflow-auto">{children}</main>
 
       {showBottomNav && <BottomNav destinations={bottomNavDestinations} />}
 

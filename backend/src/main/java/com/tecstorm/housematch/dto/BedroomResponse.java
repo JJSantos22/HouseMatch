@@ -9,7 +9,6 @@ public record BedroomResponse(
     @JsonProperty("title") String title,
     @JsonProperty("total_people") Integer totalPeople,
     @JsonProperty("total_beds") Integer totalBeds,
-    @JsonProperty("available_beds") Integer availableBeds,
     @JsonProperty("price") Integer price,
     @JsonProperty("size_sqft") Integer sizeSqft,
     @JsonProperty("furnished") Boolean furnished,

@@ -21,7 +21,7 @@ public class PropertyService {
     public PropertyResponse getById(UUID id) {
         PropertyEntity p = propertyRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Property not found"));
-        return new PropertyResponse(p.getId(), p.getTitle(), p.getAddress(), p.getLat(), p.getLng(), p.getTotalBathrooms(), p.getLaundry(), p.getDishwasher(), p.getParking(), p.getAc(), p.getWifi(), p.getSizeSqft(), p.getPhotos());
+        return new PropertyResponse(p.getId(), p.getTitle(), p.getAddress(), p.getLat(), p.getLng(), p.getTotalPeople(), p.getTotalBedrooms(), p.getTotalBathrooms(), p.getLaundry(), p.getDishwasher(), p.getParking(), p.getAc(), p.getWifi(), p.getSizeSqft(), p.getPhotos());
     }
 
     public List<PropertyMapResponse> getPropertiesForMap() {
@@ -31,7 +31,7 @@ public class PropertyService {
                 p.getLat(),
                 p.getLng(),
                 p.getBedrooms().stream()
-                    .map(b -> new BedroomMapResponse(b.getId(), b.getPrice()))
+                    .map(b -> new BedroomMapResponse(b.getId(), b.getTitle(), b.getPrice()))
                     .toList()
             ))
             .toList();

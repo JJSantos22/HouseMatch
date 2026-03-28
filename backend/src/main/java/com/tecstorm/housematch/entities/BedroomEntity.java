@@ -1,6 +1,7 @@
 package com.tecstorm.housematch.entities;
 
 import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -25,9 +26,6 @@ public class BedroomEntity {
 
     @Column(name = "total_beds", nullable = false)
     private Integer totalBeds;
-
-    @Column(name = "available_beds", nullable = false)
-    private Integer availableBeds;
 
     @Column(name = "price", nullable = false)
     private Integer price;
@@ -61,12 +59,11 @@ public class BedroomEntity {
 
     protected BedroomEntity() {}
 
-    public BedroomEntity(PropertyEntity property, String title, Integer totalPeople, Integer totalBeds, Integer availableBeds, Integer price, LocalDate availableFromDate, LocalDate availableToDate, Integer minStayMonths) {
+    public BedroomEntity(PropertyEntity property, String title, Integer totalPeople, Integer totalBeds, Integer price, LocalDate availableFromDate, LocalDate availableToDate, Integer minStayMonths) {
         this.property = property;
         this.title = title;
         this.totalPeople = totalPeople;
         this.totalBeds = totalBeds;
-        this.availableBeds = availableBeds;
         this.price = price;
         this.availableFromDate = availableFromDate;
         this.availableToDate = availableToDate;
@@ -81,7 +78,6 @@ public class BedroomEntity {
     public String getTitle() { return title; }
     public Integer getTotalPeople() { return totalPeople; }
     public Integer getTotalBeds() { return totalBeds; }
-    public Integer getAvailableBeds() { return availableBeds; }
     public Integer getPrice() { return price; }
     public Integer getSizeSqft() { return sizeSqft; }
     public Boolean getFurnished() { return furnished; }
