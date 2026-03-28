@@ -20,4 +20,10 @@ public class ReviewService {
             .map(r -> new ReviewResponse(r.getId(), r.getStudent().getId(), r.getRating(), r.getComment(), r.getCreatedAt()))
             .toList();
     }
+
+    public List<ReviewResponse> getByStudentId(UUID studentId) {
+        return reviewRepository.findByStudentId(studentId).stream()
+            .map(r -> new ReviewResponse(r.getId(), r.getStudent().getId(), r.getRating(), r.getComment(), r.getCreatedAt()))
+            .toList();
+    }
 }

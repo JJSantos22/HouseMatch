@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface ReviewRepository extends JpaRepository<ReviewEntity, UUID> {
     List<ReviewEntity> findByPropertyId(UUID propertyId);
+    List<ReviewEntity> findByStudentId(UUID studentId);
 }
