@@ -152,12 +152,12 @@ export default function ExplorePage() {
     if (userId && selectedBedroomId) {
       try {
         await addFavorite(userId, selectedBedroomId);
-        toast.success("Added to favourites");
+        toast.success("Added to favorites");
       } catch (error) {
         if (error instanceof ApiError && error.status === 409) {
-          toast.info("Already in your favourites");
+          toast.info("Already in your favorites");
         } else {
-          toast.error("Failed to add to favourites");
+          toast.error("Failed to add to favorites");
         }
       }
     }

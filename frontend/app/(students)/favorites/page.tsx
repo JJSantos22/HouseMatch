@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Heart, MapPin, Euro, Bed, Bath, Sofa, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ import { getFavorites, removeFavorite } from "@/lib/api/favorites";
 import type { BedroomDetailResponse } from "@/lib/api/property";
 
 export default function FavoritesPage() {
+  const router = useRouter();
   const userId = useAuthStore((state) => state.session?.userId);
   const isHydrated = useAuthStore((state) => state.isHydrated);
   const [favorites, setFavorites] = useState<BedroomDetailResponse[]>([]);
@@ -25,7 +27,7 @@ export default function FavoritesPage() {
         const data = await getFavorites(userId!);
         setFavorites(data);
       } catch {
-        toast.error("Failed to load favourites");
+        toast.error("Failed to load favorites");
       } finally {
         setIsLoading(false);
       }
@@ -40,7 +42,7 @@ export default function FavoritesPage() {
     try {
       await removeFavorite(userId, bedroomId);
       setFavorites((prev) => prev.filter((f) => f.bedroom.id !== bedroomId));
-      toast.success("Removed from favourites");
+      toast.success("Removed from favorites");
     } catch {
       toast.error("Failed to remove favourite");
     } finally {
@@ -51,7 +53,7 @@ export default function FavoritesPage() {
   if (!isHydrated || isLoading) {
     return (
       <main className="mx-auto flex w-full max-w-3xl flex-col p-6">
-        <h1 className="text-2xl font-bold">Favourites</h1>
+        <h1 className="text-2xl font-bold">Favorites</h1>
         <p className="text-muted-foreground mt-2">Loading...</p>
       </main>
     );
@@ -61,7 +63,7 @@ export default function FavoritesPage() {
     <main className="mx-auto flex w-full max-w-3xl flex-col gap-4 p-6">
       <div className="flex items-center gap-2">
         <Heart className="h-6 w-6" />
-        <h1 className="text-2xl font-bold">Favourites</h1>
+        <h1 className="text-2xl font-bold">Favorites</h1>
         {favorites.length > 0 && (
           <span className="text-muted-foreground text-sm">({favorites.length})</span>
         )}
@@ -69,12 +71,16 @@ export default function FavoritesPage() {
 
       {favorites.length === 0 ? (
         <p className="text-muted-foreground mt-2">
-          No favourites yet. Browse listings and tap &quot;Add to Favourites&quot;!
+          No favorites yet. Browse listings and tap &quot;Add to Favorites&quot;!
         </p>
       ) : (
         <div className="flex flex-col gap-4">
           {favorites.map(({ bedroom, property }) => (
-            <Card key={bedroom.id}>
+            <Card
+              key={bedroom.id}
+              className="cursor-pointer hover:shadow-md transition-shadow"
+              onClick={() => router.push(`/property/${property.id}`)}
+            >
               <CardHeader>
                 <CardTitle className="flex items-center gap-1 text-lg">
                   <Euro className="h-4 w-4 shrink-0" />
@@ -114,7 +120,7 @@ export default function FavoritesPage() {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => handleRemove(bedroom.id)}
+                  onClick={(e) => { e.stopPropagation(); handleRemove(bedroom.id); }}
                   disabled={removingId === bedroom.id}
                 >
                   <Trash2 className="h-4 w-4" />

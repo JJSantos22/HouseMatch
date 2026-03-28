@@ -263,7 +263,7 @@ export function BedroomDetailsCard({
           <Tooltip>
             <TooltipTrigger asChild>
               <Button variant="default" size="lg" onClick={onMatch}>
-                <Heart className="h-6 w-6" /> Add to Favourites
+                <Heart className="h-6 w-6" /> Add to Favorites
               </Button>
             </TooltipTrigger>
             <TooltipContent>Match</TooltipContent>
