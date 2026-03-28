@@ -11,7 +11,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Separator } from "@/components/ui/separator";
 import { Pencil, Check, Home, X } from "lucide-react";
 import {
   Item,
@@ -104,7 +103,7 @@ export function ProfileHistory({ houses, onUpdateHouse }: ProfileHistoryProps) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Renting History</CardTitle>
+        <CardTitle className="text-primary">Your Renting History and Reviews</CardTitle>
         <CardDescription>
           Review your experience in your previous accomodations.
         </CardDescription>
@@ -117,14 +116,13 @@ export function ProfileHistory({ houses, onUpdateHouse }: ProfileHistoryProps) {
 
             return (
               <Item key={house.id} variant="outline">
-                {index > 0 && <Separator className="mb-4" />}
                 <ItemContent>
                   <ItemDescription>{house.datesOfStay}</ItemDescription>
                   <ItemTitle>{house.name} {isEditing || <ItemDescription>{scoreLabel}</ItemDescription>}</ItemTitle>
                 </ItemContent>
                 <ItemActions>
                   {!isEditing ? (
-                    <Button
+                    house.review && <Button
                       variant="default"
                       size="icon-sm"
                       onClick={() => handleEdit(house)}
@@ -152,7 +150,7 @@ export function ProfileHistory({ houses, onUpdateHouse }: ProfileHistoryProps) {
                     </>
                   )}
                 </ItemActions>
-                <ItemFooter>
+                <ItemFooter className="items-start">
                   {isEditing ? (
                     <>
                       <FieldGroup className="gap-3">
@@ -196,8 +194,10 @@ export function ProfileHistory({ houses, onUpdateHouse }: ProfileHistoryProps) {
                         </Field>
                       </FieldGroup>
                     </>
+                  ) : house.review ? (
+                    <><strong>Review:</strong> {house.review}</>
                   ) : (
-                    <>{house.review || "No review provided"}</>
+                    <Button variant="outline" size="sm" onClick={() => handleEdit(house)}>Add Review</Button>
                   )}
                 </ItemFooter>
               </Item>

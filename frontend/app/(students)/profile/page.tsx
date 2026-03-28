@@ -31,6 +31,13 @@ export default function ProfilePage() {
       review: "Great location near campus with modern amenities. The roommates were friendly and the common areas were well-maintained.",
       score: 4,
     },
+    {
+      id: "2",
+      name: "Oak Street Residence",
+      datesOfStay: "Mar 2025 - Present",
+      review: "",
+      score: 3,
+    },
   ]);
 
   useEffect(() => {
