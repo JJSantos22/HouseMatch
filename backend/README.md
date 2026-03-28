@@ -25,7 +25,7 @@ Remote Database:
 
 ```bash
 # Start database only (requires Docker)
-supabase start -x gotrue,realtime,storage-api,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,vector,supavisor
+supabase start -x gotrue,realtime,storage-api,imgproxy,kong,mailpit,postgrest,postgres-meta,studio,edge-runtime,logflare,supavisor
 
 # Start all Supabase services
 supabase start

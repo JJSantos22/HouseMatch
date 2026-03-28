@@ -77,3 +77,20 @@ export async function getPropertyById(propertyId: string): Promise<PropertyRespo
 export async function getBedroomsByPropertyId(propertyId: string): Promise<BedroomsDetailResponse> {
   return apiRequest<BedroomsDetailResponse>(`/api/property/${propertyId}/bedroom`);
 }
+
+export interface BedroomMatchResponse {
+  bedroom: BedroomResponse;
+  property: PropertyResponse;
+  score: number;
+  breakdown: { trait: string; weight: number; match: boolean }[];
+}
+
+export interface BedroomMatchesResponse {
+  matches: BedroomMatchResponse[];
+}
+
+export async function getMatches(userId: string): Promise<BedroomMatchesResponse> {
+  return apiRequest<BedroomMatchesResponse>("/api/property/matches", {
+    headers: { "X-User-Id": userId },
+  });
+}
