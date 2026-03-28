@@ -37,8 +37,8 @@ class PropertyControllerTest {
         PropertyTraitService propertyTraitService = org.mockito.Mockito.mock(PropertyTraitService.class);
         MockMvc mockMvc = mockMvc(propertyService, bedroomService, reviewService, bedroomMatchingService, propertyTraitService);
 
-        UUID studentId = UUID.randomUUID();
-        when(bedroomMatchingService.getMatchesByStudentId(studentId)).thenReturn(new BedroomMatchesResponse(List.of(
+        UUID userId = UUID.randomUUID();
+        when(bedroomMatchingService.getMatchesByProfileId(userId)).thenReturn(new BedroomMatchesResponse(List.of(
             new BedroomMatchResponse(
                 new BedroomResponse(UUID.randomUUID(), "Room A", 1, 1, 500, null, true, false, null, null, 3, null, true),
                 new PropertyResponse(UUID.randomUUID(), "Property A", "Address", 0.0, 0.0, 1, 1, 1, null, false, false, false, true, null, null),
@@ -47,7 +47,7 @@ class PropertyControllerTest {
             )
         )));
 
-        mockMvc.perform(get("/api/property/matches/student/{studentId}", studentId))
+        mockMvc.perform(get("/api/property/matches").header("X-User-Id", userId))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.matches[0].score").value(92))
             .andExpect(jsonPath("$.matches[0].breakdown[0].trait").value("schedule"));

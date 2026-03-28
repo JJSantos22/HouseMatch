@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -80,9 +81,9 @@ public class PropertyController {
         return ResponseEntity.ok(reviewService.getByPropertyId(propertyId));
     }
 
-    @GetMapping("/matches/student/{studentId}")
-    public ResponseEntity<BedroomMatchesResponse> getMatchesByStudentId(@PathVariable UUID studentId) {
-        return ResponseEntity.ok(bedroomMatchingService.getMatchesByStudentId(studentId));
+    @GetMapping("/matches")
+    public ResponseEntity<BedroomMatchesResponse> getMatchesByStudent(@RequestHeader("X-User-Id") UUID userId) {
+        return ResponseEntity.ok(bedroomMatchingService.getMatchesByProfileId(userId));
     }
 
     @GetMapping("/{propertyId}/bedroom/{bedroomId}/match/student/{studentId}")

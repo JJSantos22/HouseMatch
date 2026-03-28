@@ -363,18 +363,21 @@
           "name": "Get Student Matches",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              }
+            ],
             "url": {
-              "raw": "{{baseUrl}}/api/property/matches/student/{{studentId}}",
+              "raw": "{{baseUrl}}/api/property/matches",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
                 "property",
-                "matches",
-                "student",
-                "{{studentId}}"
+                "matches"
               ]
             }
           },

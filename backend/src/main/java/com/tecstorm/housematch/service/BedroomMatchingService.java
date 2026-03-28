@@ -42,8 +42,8 @@ public class BedroomMatchingService {
     }
 
     @Transactional(readOnly = true)
-    public BedroomMatchesResponse getMatchesByStudentId(UUID studentId) {
-        studentService.getById(studentId);
+    public BedroomMatchesResponse getMatchesByProfileId(UUID profileId) {
+        UUID studentId = studentService.get(profileId).getId();
         var studentInput = personalityTraitService.getMatchInput(studentId);
 
         List<BedroomMatchResponse> matches = bedroomRepository.findAll().stream()

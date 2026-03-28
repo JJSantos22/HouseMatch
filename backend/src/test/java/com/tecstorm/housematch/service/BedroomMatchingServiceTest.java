@@ -13,6 +13,7 @@ import com.tecstorm.housematch.ai.MatchInput;
 import com.tecstorm.housematch.dto.Bedroom.BedroomMatchesResponse;
 import com.tecstorm.housematch.entities.Bedroom.BedroomEntity;
 import com.tecstorm.housematch.entities.Property.PropertyEntity;
+import com.tecstorm.housematch.entities.Student.StudentEntity;
 import com.tecstorm.housematch.repository.BedroomRepository;
 
 class BedroomMatchingServiceTest {
@@ -38,6 +39,10 @@ class BedroomMatchingServiceTest {
         );
 
         when(bedroomRepository.findAll()).thenReturn(List.of(lowMatch, highMatch));
+        UUID studentId = UUID.randomUUID();
+        StudentEntity student = Mockito.mock(StudentEntity.class);
+        when(student.getId()).thenReturn(studentId);
+        when(studentService.get(Mockito.any())).thenReturn(student);
         when(personalityTraitService.getMatchInput(Mockito.any())).thenReturn(new MatchInput(
             MatchInput.Schedule.BALANCED,
             MatchInput.Social.AMBIVERT,
@@ -70,7 +75,7 @@ class BedroomMatchingServiceTest {
             propertyTraitService
         );
 
-        BedroomMatchesResponse response = service.getMatchesByStudentId(UUID.randomUUID());
+        BedroomMatchesResponse response = service.getMatchesByProfileId(UUID.randomUUID());
 
         assertEquals(2, response.matches().size());
         assertEquals("High Match", response.matches().getFirst().bedroom().title());
