@@ -3,6 +3,12 @@
 ## App Standards
 AI agents: see `.kiro/steering`. Keep all agent (ex: `.claude`) files in sync. 
 
+## Architecture
+
+- Target backend organization: `docs/backend-architecture.md`
+- Phase migration map: `docs/backend-migration-map.md`
+- Architecture guardrails: `src/test/java/com/tecstorm/housematch/common/infrastructure/ArchitectureRulesTest.java`
+
 ## Run Application (mvnw or mvn)
 
 Local database:

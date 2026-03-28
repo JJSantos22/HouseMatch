@@ -1,0 +1,47 @@
+package com.tecstorm.housematch.matching.domain;
+
+import java.util.Map;
+
+import com.tecstorm.housematch.ai.MatchInput;
+import com.tecstorm.housematch.personality.domain.PersonalityCategory;
+import com.tecstorm.housematch.personality.domain.PersonalityLevel;
+
+public final class TraitMatchInputMapper {
+    private TraitMatchInputMapper() {}
+
+    public static MatchInput toMatchInput(Map<PersonalityCategory, PersonalityLevel> traitMap) {
+        return new MatchInput(
+            toSchedule(traitMap.get(PersonalityCategory.SCHEDULE)),
+            toSocial(traitMap.get(PersonalityCategory.SOCIAL)),
+            toPreference(traitMap.get(PersonalityCategory.NOISE)),
+            toAcademic(traitMap.get(PersonalityCategory.ACADEMIC)),
+            toCleanliness(traitMap.get(PersonalityCategory.CLEANLINESS)),
+            toPreference(traitMap.get(PersonalityCategory.GUEST_FREQUENCY))
+        );
+    }
+
+    private static MatchInput.Schedule toSchedule(PersonalityLevel level) {
+        if (level == null) return null;
+        return MatchInput.Schedule.valueOf(level.name());
+    }
+
+    private static MatchInput.Social toSocial(PersonalityLevel level) {
+        if (level == null) return null;
+        return MatchInput.Social.valueOf(level.name());
+    }
+
+    private static MatchInput.Preference toPreference(PersonalityLevel level) {
+        if (level == null) return null;
+        return MatchInput.Preference.valueOf(level.name());
+    }
+
+    private static MatchInput.Academic toAcademic(PersonalityLevel level) {
+        if (level == null) return null;
+        return MatchInput.Academic.valueOf(level.name());
+    }
+
+    private static MatchInput.Cleanliness toCleanliness(PersonalityLevel level) {
+        if (level == null) return null;
+        return MatchInput.Cleanliness.valueOf(level.name());
+    }
+}
