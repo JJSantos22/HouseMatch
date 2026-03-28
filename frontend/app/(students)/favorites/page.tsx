@@ -3,10 +3,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Heart, MapPin, Euro, Bed, Bath, Sofa, Trash2 } from "lucide-react";
+import { Heart, MapPin, Euro, HeartMinus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { BedroomAmenityBadges } from "@/components/BedroomAmenityBadges";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardAction,
+} from "@/components/ui/card";
 import { useAuthStore } from "@/lib/auth/store";
 import { getFavorites, removeFavorite } from "@/lib/api/favorites";
 import type { BedroomDetailResponse } from "@/lib/api/property";
@@ -65,13 +73,16 @@ export default function FavoritesPage() {
         <Heart className="h-6 w-6" />
         <h1 className="text-2xl font-bold">Favorites</h1>
         {favorites.length > 0 && (
-          <span className="text-muted-foreground text-sm">({favorites.length})</span>
+          <span className="text-muted-foreground text-sm">
+            ({favorites.length})
+          </span>
         )}
       </div>
 
       {favorites.length === 0 ? (
         <p className="text-muted-foreground mt-2">
-          No favorites yet. Browse listings and tap &quot;Add to Favorites&quot;!
+          No favorites yet. Browse listings and tap &quot;Add to
+          Favorites&quot;!
         </p>
       ) : (
         <div className="flex flex-col gap-4">
@@ -79,51 +90,42 @@ export default function FavoritesPage() {
             <Card
               key={bedroom.id}
               className="cursor-pointer hover:shadow-md transition-shadow"
-              onClick={() => router.push(`/property/${property.id}`)}
+              onClick={() => router.push(`/house/${property.id}`)}
             >
               <CardHeader>
-                <CardTitle className="flex items-center gap-1 text-lg">
-                  <Euro className="h-4 w-4 shrink-0" />
-                  {bedroom.price}
-                  <span className="text-sm font-normal text-muted-foreground">/month</span>
+                <CardTitle className="flex items-center gap-1">
+                  <Euro className="h-5 w-5 shrink-0" />
+                  <span>
+                    {bedroom.price}
+                    <span className="text-sm font-normal text-muted-foreground">
+                      /month
+                    </span>
+                  </span>
                 </CardTitle>
-                <CardDescription>
-                  {property.title} — {bedroom.title}
+                <CardDescription className="col-span-2">
+                  {property.title} - {bedroom.title}
                 </CardDescription>
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <MapPin className="h-3.5 w-3.5 shrink-0" />
-                  {property.address}
-                </div>
+                <CardAction className="flex items-center gap-1 text-muted-foreground truncate row-span-1">
+                  <MapPin className="h-4 w-4 shrink-0" />
+                  <span className="truncate">{property.address}</span>
+                </CardAction>
               </CardHeader>
 
               <CardContent>
-                <div className="flex flex-wrap gap-1.5">
-                  <Badge variant="outline" className="flex items-center gap-1 py-1">
-                    <Bed className="h-3.5 w-3.5" />
-                    <span className="text-xs">{bedroom.total_beds} Bed{bedroom.total_beds > 1 ? "s" : ""}</span>
-                  </Badge>
-                  <Badge variant="outline" className="flex items-center gap-1 py-1">
-                    <Bath className="h-3.5 w-3.5" />
-                    <span className="text-xs">{bedroom.private_bath ? "Private Bath" : "Shared Bath"}</span>
-                  </Badge>
-                  <Badge variant="outline" className="flex items-center gap-1 py-1">
-                    <Sofa className="h-3.5 w-3.5" />
-                    <span className="text-xs">{bedroom.furnished ? "Furnished" : "Unfurnished"}</span>
-                  </Badge>
-                  <Badge variant="secondary" className="text-xs py-1">
-                    Min {bedroom.min_stay_months} mo
-                  </Badge>
-                </div>
+                <BedroomAmenityBadges bedroom={bedroom} />
               </CardContent>
 
               <CardFooter className="justify-end">
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={(e) => { e.stopPropagation(); handleRemove(bedroom.id); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleRemove(bedroom.id);
+                  }}
                   disabled={removingId === bedroom.id}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <HeartMinus className="h-4 w-4" />
                   {removingId === bedroom.id ? "Removing..." : "Remove"}
                 </Button>
               </CardFooter>

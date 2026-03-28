@@ -1,7 +1,6 @@
 "use client";
 
 import { ImageGallery } from "./ImageGallery";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,33 +17,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import {
-  MapPin,
-  Euro,
-  Bed,
-  Bath,
-  Users,
-  Clock3,
-  Maximize2,
-  X,
-  SkipForward,
-  Heart,
-  ArrowDown,
-  Sofa,
-  Wifi,
-  Car,
-  Wind,
-  Utensils,
-  WashingMachine,
-} from "lucide-react";
+import { MapPin, Euro, Heart, ArrowDown } from "lucide-react";
 import type { BedroomResponse, PropertyResponse } from "@/lib/api/property";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-const LAUNDRY_LABELS: Record<string, string> = {
-  BUILDING: "In Building",
-  HOUSE: "In House",
-  NONE: "None",
-};
+import { BedroomAmenityBadges } from "@/components/BedroomAmenityBadges";
+import { PropertyAmenityBadges } from "@/components/PropertyAmenityBadges";
 
 const MOCK_IMAGES = [
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop",
@@ -55,21 +32,19 @@ const MOCK_IMAGES = [
 interface BedroomDetailsCardProps {
   bedroom: BedroomResponse;
   property: PropertyResponse;
-  onDiscard: () => void;
-  onSkip: () => void;
   onMatch: () => void;
   onClose?: () => void;
   onExitSmartSuggestion?: () => void;
+  onOpenDetails?: () => void;
 }
 
 export function BedroomDetailsCard({
   bedroom,
   property,
-  onDiscard,
-  onSkip,
   onMatch,
   onClose,
   onExitSmartSuggestion,
+  onOpenDetails,
 }: BedroomDetailsCardProps) {
   // Use bedroom photos if available, fallback to property photos, then mock images
   const images =
@@ -78,16 +53,39 @@ export function BedroomDetailsCard({
       : property.photos?.length > 0
         ? property.photos
         : MOCK_IMAGES;
-  const sizeSqm = Math.round(bedroom.size_sqft * 0.0929);
-  const propertySizeSqm = Math.round(property.size_sqft * 0.0929);
 
   const formatDate = (value: string) => {
     const parsed = new Date(value);
     return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString();
   };
 
+  const handleCardClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!onOpenDetails) {
+      return;
+    }
+
+    onOpenDetails();
+  };
+
+  const handleCardKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (!onOpenDetails) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onOpenDetails();
+    }
+  };
+
   return (
-    <Card className="relative flex w-full min-w-[320px] max-h-[66vh] flex-col overflow-hidden shadow-lg md:max-h-[90vh] md:w-100 md:shrink-0 pt-0">
+    <Card
+      className={`relative flex w-full min-w-[320px] max-h-[66vh] flex-col overflow-hidden shadow-lg md:max-h-[90vh] md:w-100 md:shrink-0 pt-0 ${onOpenDetails ? "cursor-pointer" : ""}`}
+      tabIndex={onOpenDetails ? 0 : -1}
+      onKeyDown={handleCardKeyDown}
+      role={onOpenDetails ? "button" : undefined}
+      aria-label={onOpenDetails ? "Open house details" : undefined}
+    >
       <ImageGallery images={images} onClose={onClose} />
 
       <CardHeader>
@@ -110,7 +108,7 @@ export function BedroomDetailsCard({
       </CardHeader>
 
       <ScrollArea>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4" onClick={handleCardClick}>
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-semibold">Availability</h3>
             <p className="text-xs text-muted-foreground">
@@ -121,130 +119,18 @@ export function BedroomDetailsCard({
 
           <div>
             <h3 className="mb-3 text-sm font-semibold">Room Details</h3>
-            <div className="flex flex-wrap gap-1">
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Users className="h-4 w-4" />
-                <span className="text-xs">{bedroom.total_people} People</span>
-              </Badge>
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Bed className="h-4 w-4" />
-                <span className="text-xs">
-                  {bedroom.total_beds} Bed{bedroom.total_beds > 1 ? "s" : ""}
-                </span>
-              </Badge>
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Bath className="h-4 w-4" />
-                <span className="text-xs">
-                  {bedroom.private_bath ? "Private" : "Shared"}
-                </span>
-              </Badge>
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Maximize2 className="h-4 w-4" />
-                <span className="text-xs">{sizeSqm}m²</span>
-              </Badge>
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Sofa className="h-4 w-4" />
-                <span className="text-xs">
-                  {bedroom.furnished ? "Furnished" : "Unfurnished"}
-                </span>
-              </Badge>
-              <Badge
-                variant="outline"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Clock3 className="h-4 w-4" />
-                <span className="text-xs">
-                  Min Stay {bedroom.min_stay_months} mo
-                </span>
-              </Badge>
-            </div>
+            <BedroomAmenityBadges bedroom={bedroom} />
           </div>
 
           <div>
             <h3 className="mb-3 text-sm font-semibold">Property Amenities</h3>
-            <div className="flex flex-wrap gap-1">
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Wifi className="h-4 w-4" />
-                <span className="text-xs">
-                  WiFi: {property.wifi ? "Yes" : "No"}
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Wind className="h-4 w-4" />
-                <span className="text-xs">
-                  AC: {property.ac ? "Yes" : "No"}
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Car className="h-4 w-4" />
-                <span className="text-xs">
-                  Parking: {property.parking ? "Yes" : "No"}
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Utensils className="h-4 w-4" />
-                <span className="text-xs">
-                  Dishwasher: {property.dishwasher ? "Yes" : "No"}
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <WashingMachine className="h-4 w-4" />
-                <span className="text-xs">Laundry: {LAUNDRY_LABELS[property.laundry] ?? property.laundry}</span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Bath className="h-4 w-4" />
-                <span className="text-xs">
-                  {property.total_bathrooms} Bathrooms
-                </span>
-              </Badge>
-              <Badge
-                variant="secondary"
-                className="flex items-center gap-1.5 py-2"
-              >
-                <Maximize2 className="h-4 w-4" />
-                <span className="text-xs">{propertySizeSqm}m²</span>
-              </Badge>
-            </div>
+            <PropertyAmenityBadges property={property} />
           </div>
         </CardContent>
       </ScrollArea>
 
       <CardFooter className="justify-center gap-2">
         <TooltipProvider>
-
           {onExitSmartSuggestion && (
             <Tooltip>
               <TooltipTrigger asChild>

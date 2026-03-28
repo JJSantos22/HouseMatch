@@ -74,7 +74,7 @@ export default function StudentsLayout({
 
   return (
     <div className="h-screen overflow-hidden bg-accent-foreground flex flex-col">
-      <TopBar />
+      <TopBar showBackButton={pathname.startsWith("/house/")} backHref="/explore" />
 
       {/* Main Content */}
       <main className="relative flex-1 overflow-auto">{children}</main>

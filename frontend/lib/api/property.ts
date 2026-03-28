@@ -36,6 +36,8 @@ export interface PropertyResponse {
   address: string;
   lat: number;
   lng: number;
+  total_people: number;
+  total_bedrooms: number;
   total_bathrooms: number;
   laundry: string;
   dishwasher: boolean;
@@ -51,6 +53,11 @@ export interface BedroomDetailResponse {
   property: PropertyResponse;
 }
 
+export interface BedroomsDetailResponse {
+  bedrooms: BedroomResponse[];
+  property: PropertyResponse;
+}
+
 export async function getPropertiesForMap(): Promise<PropertyMapResponse[]> {
   return apiRequest<PropertyMapResponse[]>("/api/property/map");
 }
@@ -61,4 +68,12 @@ export async function getProperty(propertyId: string): Promise<PropertyResponse>
 
 export async function getBedroomDetail(propertyId: string, bedroomId: string): Promise<BedroomDetailResponse> {
   return apiRequest<BedroomDetailResponse>(`/api/property/${propertyId}/bedroom/${bedroomId}`);
+}
+
+export async function getPropertyById(propertyId: string): Promise<PropertyResponse> {
+  return apiRequest<PropertyResponse>(`/api/property/${propertyId}`);
+}
+
+export async function getBedroomsByPropertyId(propertyId: string): Promise<BedroomsDetailResponse> {
+  return apiRequest<BedroomsDetailResponse>(`/api/property/${propertyId}/bedroom`);
 }
