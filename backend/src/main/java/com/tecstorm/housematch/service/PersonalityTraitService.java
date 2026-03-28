@@ -1,14 +1,21 @@
 package com.tecstorm.housematch.service;
 
-import com.tecstorm.housematch.dto.PersonalityTraitsResponse;
-import com.tecstorm.housematch.dto.UpdateProfileRequest;
-import com.tecstorm.housematch.entities.*;
-import com.tecstorm.housematch.repository.*;
-import org.springframework.stereotype.Service;
+import com.tecstorm.housematch.ai.MatchInput;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import com.tecstorm.housematch.dto.PersonalityTraitsResponse;
+import com.tecstorm.housematch.dto.UpdateProfileRequest;
+import com.tecstorm.housematch.entities.PersonalityCategory;
+import com.tecstorm.housematch.entities.PersonalityLevel;
+import com.tecstorm.housematch.entities.PersonalityTraitEntity;
+import com.tecstorm.housematch.entities.UserPersonalityTraitEntity;
+import com.tecstorm.housematch.repository.PersonalityTraitRepository;
+import com.tecstorm.housematch.repository.UserPersonalityTraitRepository;
 
 @Service
 public class PersonalityTraitService {
@@ -22,27 +29,25 @@ public class PersonalityTraitService {
     }
 
     public PersonalityTraitsResponse get(UUID studentId) {
-        Map<PersonalityCategory, PersonalityLevel> traitMap = userPersonalityTraitRepository.findTraitsByStudentId(studentId).stream()
-            .collect(Collectors.toMap(PersonalityTraitEntity::getCategory, PersonalityTraitEntity::getLevel));
+        return toResponse(getTraitMap(studentId));
+    }
 
-        return new PersonalityTraitsResponse(
-            traitMap.get(PersonalityCategory.SCHEDULE),
-            traitMap.get(PersonalityCategory.SOCIAL),
-            traitMap.get(PersonalityCategory.CLEANLINESS),
-            traitMap.get(PersonalityCategory.ACADEMIC),
-            traitMap.get(PersonalityCategory.LIFESTYLE),
-            traitMap.get(PersonalityCategory.PRIORITY)
-        );
+    public MatchInput getMatchInput(UUID studentId) {
+        return TraitMatchInputMapper.toMatchInput(getTraitMap(studentId));
+    }
+
+    public Map<PersonalityCategory, PersonalityLevel> getTraitMapForStudent(UUID studentId) {
+        return getTraitMap(studentId);
     }
 
     public void update(UUID studentId, UpdateProfileRequest request) {
         var allTraits = personalityTraitRepository.findAll();
         save(studentId, PersonalityCategory.SCHEDULE, request.schedule(), allTraits);
         save(studentId, PersonalityCategory.SOCIAL, request.social(), allTraits);
-        save(studentId, PersonalityCategory.CLEANLINESS, request.cleanliness(), allTraits);
+        save(studentId, PersonalityCategory.NOISE, request.noise(), allTraits);
         save(studentId, PersonalityCategory.ACADEMIC, request.academic(), allTraits);
-        save(studentId, PersonalityCategory.LIFESTYLE, request.lifestyle(), allTraits);
-        save(studentId, PersonalityCategory.PRIORITY, request.priority(), allTraits);
+        save(studentId, PersonalityCategory.CLEANLINESS, request.cleanliness(), allTraits);
+        save(studentId, PersonalityCategory.GUEST_FREQUENCY, request.guest_frequency(), allTraits);
     }
 
     private void save(UUID studentId, PersonalityCategory category, PersonalityLevel level, List<PersonalityTraitEntity> allTraits) {
@@ -54,5 +59,21 @@ public class PersonalityTraitService {
                 userPersonalityTraitRepository.deleteByStudentIdAndCategory(studentId, category);
                 userPersonalityTraitRepository.save(new UserPersonalityTraitEntity(studentId, trait.getId()));
             });
+    }
+
+    private Map<PersonalityCategory, PersonalityLevel> getTraitMap(UUID studentId) {
+        return userPersonalityTraitRepository.findTraitsByStudentId(studentId).stream()
+            .collect(Collectors.toMap(PersonalityTraitEntity::getCategory, PersonalityTraitEntity::getLevel));
+    }
+
+    private PersonalityTraitsResponse toResponse(Map<PersonalityCategory, PersonalityLevel> traitMap) {
+        return new PersonalityTraitsResponse(
+            traitMap.get(PersonalityCategory.SCHEDULE),
+            traitMap.get(PersonalityCategory.SOCIAL),
+            traitMap.get(PersonalityCategory.NOISE),
+            traitMap.get(PersonalityCategory.ACADEMIC),
+            traitMap.get(PersonalityCategory.CLEANLINESS),
+            traitMap.get(PersonalityCategory.GUEST_FREQUENCY)
+        );
     }
 }

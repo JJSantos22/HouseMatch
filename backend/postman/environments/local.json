@@ -4,13 +4,13 @@
   "values": [
     {
       "key": "baseUrl",
-      "value": "",
+      "value": "http://localhost:8080",
       "enabled": true,
       "type": "default"
     },
     {
       "key": "userId",
-      "value": "",
+      "value": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
       "enabled": true,
       "type": "default"
     }

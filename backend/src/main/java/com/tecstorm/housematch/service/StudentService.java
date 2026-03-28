@@ -20,6 +20,11 @@ public class StudentService {
             .orElseThrow(() -> new RuntimeException("Student not found"));
     }
 
+    public StudentEntity getById(UUID studentId) {
+        return studentRepository.findById(studentId)
+            .orElseThrow(() -> new RuntimeException("Student not found"));
+    }
+
     public void update(UUID profileId, UpdateProfileRequest request) {
         StudentEntity student = get(profileId);
         student.setUniversity(request.university());

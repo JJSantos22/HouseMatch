@@ -1,10 +1,19 @@
 package com.tecstorm.housematch.entities;
 
-import jakarta.persistence.*;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "property")
@@ -57,6 +66,10 @@ public class PropertyEntity {
     @Column(name = "photos", columnDefinition = "TEXT[]")
     private String[] photos;
 
+    @Column(name = "embedding", columnDefinition = "vector(6)")
+    @org.hibernate.annotations.JdbcTypeCode(org.hibernate.type.SqlTypes.VECTOR)
+    private float[] embedding;
+
     @Column(name = "created_at")
     private OffsetDateTime createdAt;
 
@@ -92,6 +105,9 @@ public class PropertyEntity {
     public Boolean getWifi() { return wifi; }
     public Integer getSizeSqft() { return sizeSqft; }
     public String[] getPhotos() { return photos; }
+    public float[] getEmbedding() { return embedding; }
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public List<BedroomEntity> getBedrooms() { return bedrooms; }
+
+    public void setEmbedding(float[] embedding) { this.embedding = embedding; }
 }

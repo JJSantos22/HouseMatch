@@ -2,6 +2,7 @@ package com.tecstorm.housematch.service;
 
 import com.tecstorm.housematch.dto.ProfileResponse;
 import com.tecstorm.housematch.entities.UserRole;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Disabled("Requires a running local Postgres/Supabase instance")
 class ProfileServiceIntegrationTest {
 
     @Autowired
@@ -18,14 +20,15 @@ class ProfileServiceIntegrationTest {
 
     @Test
     void getStudentProfile() {
-        UUID studentId = UUID.fromString("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
-        ProfileResponse response = profileService.getProfile(studentId);
+        UUID profileId = UUID.fromString("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
+        ProfileResponse response = profileService.getProfile(profileId);
 
         assertEquals("John Student", response.name());
         assertEquals(UserRole.student, response.role());
         assertEquals("University of Lisbon", response.university());
         assertNull(response.phone());
         assertEquals("student@test.com", response.email());
+        assertNotNull(response.studentId());
     }
 
     @Test
@@ -38,5 +41,6 @@ class ProfileServiceIntegrationTest {
         assertNull(response.university());
         assertEquals("+351912345678", response.phone());
         assertEquals("landlord@test.com", response.email());
+        assertNull(response.studentId());
     }
 }

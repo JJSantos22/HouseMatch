@@ -23,3 +23,49 @@ UNION ALL
 SELECT id, 'Cozy Room', 1, 1, 410, 110, TRUE, TRUE, DATE '2025-09-01', DATE '2026-08-31', 3, ARRAY['https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=800&h=600&fit=crop', 'https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=800&h=600&fit=crop'], TRUE FROM property WHERE address = 'Rua Garrett 45, Lisboa'
 UNION ALL
 SELECT id, 'Studio Room', 1, 1, 395, 105, TRUE, TRUE, DATE '2025-09-01', DATE '2026-08-31', 3, ARRAY['https://images.unsplash.com/photo-1494526585095-c41746248156?w=800&h=600&fit=crop', 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=600&fit=crop'], TRUE FROM property WHERE address = 'Av. Dom João II 30, Lisboa';
+
+-- Seed property traits
+INSERT INTO property_personality_trait (property_id, personality_trait_id)
+SELECT p.id, pt.id
+FROM (
+  VALUES
+    ('Rua Augusta 10, Lisboa', 'SCHEDULE', 'BALANCED'),
+    ('Rua Augusta 10, Lisboa', 'SOCIAL', 'AMBIVERT'),
+    ('Rua Augusta 10, Lisboa', 'NOISE', 'LOW'),
+    ('Rua Augusta 10, Lisboa', 'ACADEMIC', 'BALANCED'),
+    ('Rua Augusta 10, Lisboa', 'CLEANLINESS', 'MODERATE'),
+    ('Rua Augusta 10, Lisboa', 'GUEST_FREQUENCY', 'MEDIUM'),
+
+    ('Rua de São Miguel 25, Lisboa', 'SCHEDULE', 'BALANCED'),
+    ('Rua de São Miguel 25, Lisboa', 'SOCIAL', 'INTROVERT'),
+    ('Rua de São Miguel 25, Lisboa', 'NOISE', 'LOW'),
+    ('Rua de São Miguel 25, Lisboa', 'ACADEMIC', 'INTENSIVE'),
+    ('Rua de São Miguel 25, Lisboa', 'CLEANLINESS', 'MODERATE'),
+    ('Rua de São Miguel 25, Lisboa', 'GUEST_FREQUENCY', 'LOW'),
+
+    ('Rua de Belém 80, Lisboa', 'SCHEDULE', 'EARLY_BIRD'),
+    ('Rua de Belém 80, Lisboa', 'SOCIAL', 'AMBIVERT'),
+    ('Rua de Belém 80, Lisboa', 'NOISE', 'MEDIUM'),
+    ('Rua de Belém 80, Lisboa', 'ACADEMIC', 'BALANCED'),
+    ('Rua de Belém 80, Lisboa', 'CLEANLINESS', 'MODERATE'),
+    ('Rua de Belém 80, Lisboa', 'GUEST_FREQUENCY', 'MEDIUM'),
+
+    ('Rua Garrett 45, Lisboa', 'SCHEDULE', 'NIGHT_OWL'),
+    ('Rua Garrett 45, Lisboa', 'SOCIAL', 'INTROVERT'),
+    ('Rua Garrett 45, Lisboa', 'NOISE', 'LOW'),
+    ('Rua Garrett 45, Lisboa', 'ACADEMIC', 'INTENSIVE'),
+    ('Rua Garrett 45, Lisboa', 'CLEANLINESS', 'STRICT'),
+    ('Rua Garrett 45, Lisboa', 'GUEST_FREQUENCY', 'LOW'),
+
+    ('Av. Dom João II 30, Lisboa', 'SCHEDULE', 'BALANCED'),
+    ('Av. Dom João II 30, Lisboa', 'SOCIAL', 'AMBIVERT'),
+    ('Av. Dom João II 30, Lisboa', 'NOISE', 'LOW'),
+    ('Av. Dom João II 30, Lisboa', 'ACADEMIC', 'BALANCED'),
+    ('Av. Dom João II 30, Lisboa', 'CLEANLINESS', 'MODERATE'),
+    ('Av. Dom João II 30, Lisboa', 'GUEST_FREQUENCY', 'LOW')
+) AS seed(address, category, level)
+JOIN property p ON p.address = seed.address
+JOIN personality_trait pt
+  ON pt.category = seed.category
+ AND pt.level = seed.level
+ON CONFLICT DO NOTHING;

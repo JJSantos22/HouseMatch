@@ -9,6 +9,7 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ProfileResponse(
     @JsonProperty("id") UUID id,
+    @JsonProperty("student_id") UUID studentId,
     @JsonProperty("name") String name,
     @JsonProperty("role") UserRole role,
     @JsonProperty("university") String university,
