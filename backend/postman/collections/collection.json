@@ -191,6 +191,70 @@
         }
       ],
       "id": "e088c48e-2e8e-411f-80ad-fe79f40f4e10"
+    },
+    {
+      "name": "Property",
+      "item": [
+        {
+          "name": "Get Properties For Map",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/property/map",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "map"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Property",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/property/{{propertyId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "{{propertyId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Bedroom",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/property/{{propertyId}}/bedroom/{{bedroomId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "{{propertyId}}",
+                "bedroom",
+                "{{bedroomId}}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ]
 }

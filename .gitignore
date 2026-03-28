@@ -1,0 +1,17 @@
+/.idea/.gitignore
+/ai/ai.iml
+/.idea/amazonq.xml
+/frontend/.idea/amazonq.xml
+/frontend/.idea/aws.xml
+/.idea/compiler.xml
+/.idea/encodings.xml
+/frontend/frontend.iml
+/.idea/HouseMatch.iml
+/.idea/jarRepositories.xml
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/frontend/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
+/frontend/.idea/vcs.xml
+/frontend/.idea/workspace.xml
