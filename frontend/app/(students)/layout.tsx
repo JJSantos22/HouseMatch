@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { Toaster } from "sonner";
 import { TopBar } from "./_components/TopBar";
 import { BottomNav } from "./_components/BottomNav";
-import { Compass, Heart, Users, MessageCircle, UserCircle } from "lucide-react";
+import { Compass, Heart, Users, MessageCircle, UserCircle, Sparkles } from "lucide-react";
 
 export default function StudentsLayout({
   children,
@@ -51,10 +51,10 @@ export default function StudentsLayout({
       icon: Heart,
     },
     {
-      displayName: "Matches",
+      displayName: "AI Match",
       onClick: () => router.push("/matches"),
       active: pathname === "/matches",
-      icon: Users,
+      icon: Sparkles,
     },
     {
       displayName: "Messages",
