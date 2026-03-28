@@ -8,7 +8,7 @@ import { useAuthStore } from "@/lib/auth/store";
 import { RoomsMap, type MapPadding } from "./_components/RoomsMap";
 import { BedroomDetailsCard } from "@/app/(students)/explore/_components/BedroomDetailsCard";
 import { BedroomList } from "@/app/(students)/explore/_components/BedroomList";
-import { SmartSuggestionsButton } from "@/app/(students)/explore/_components/SmartSuggestionsButton";
+import { PreferencesButton } from "@/app/(students)/explore/_components/PreferencesButton";
 import {
   getPropertiesForMap,
   getBedroomDetail,
@@ -215,11 +215,7 @@ export default function ExplorePage() {
       />
 
       {!selectedPropertyId && (
-        <SmartSuggestionsButton
-          onClick={handleStartSmartSuggestions}
-          isLoading={isLoadingSmartSuggestions}
-          isMobile={isMobile}
-        />
+        <PreferencesButton isMobile={isMobile} />
       )}
 
       {selectedBedroom && selectedProperty && (

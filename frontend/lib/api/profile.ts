@@ -294,3 +294,54 @@ export async function updateProfile(
     body: validatedRequest,
   });
 }
+
+export type Laundry = "BUILDING" | "HOUSE" | "NONE";
+
+export interface SearchPreferences {
+  minPrice?: number;
+  maxPrice?: number;
+  minStayMonths?: number;
+  availableFrom?: string;
+  furnished?: boolean;
+  privateBath?: boolean;
+  privateRoom?: boolean;
+  maxRoommates?: number;
+  maxBedrooms?: number;
+  dishwasher?: boolean;
+  parking?: boolean;
+  ac?: boolean;
+  wifi?: boolean;
+  laundry?: Laundry;
+  centerLat?: number;
+  centerLng?: number;
+  radiusKm?: number;
+}
+
+export async function updateSearchPreferences(
+  userId: string,
+  preferences: SearchPreferences,
+): Promise<void> {
+  await apiRequest<void>("/api/profile/search-preferences", {
+    method: "PUT",
+    headers: { "X-User-Id": userId },
+    body: {
+      min_price: preferences.minPrice,
+      max_price: preferences.maxPrice,
+      min_stay_months: preferences.minStayMonths,
+      available_from: preferences.availableFrom,
+      furnished: preferences.furnished,
+      private_bath: preferences.privateBath,
+      private_room: preferences.privateRoom,
+      max_roommates: preferences.maxRoommates,
+      max_bedrooms: preferences.maxBedrooms,
+      dishwasher: preferences.dishwasher,
+      parking: preferences.parking,
+      ac: preferences.ac,
+      wifi: preferences.wifi,
+      laundry: preferences.laundry,
+      center_lat: preferences.centerLat,
+      center_lng: preferences.centerLng,
+      radius_km: preferences.radiusKm,
+    },
+  });
+}
