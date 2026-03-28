@@ -55,6 +55,10 @@ export async function getPropertiesForMap(): Promise<PropertyMapResponse[]> {
   return apiRequest<PropertyMapResponse[]>("/api/property/map");
 }
 
+export async function getProperty(propertyId: string): Promise<PropertyResponse> {
+  return apiRequest<PropertyResponse>(`/api/property/${propertyId}`);
+}
+
 export async function getBedroomDetail(propertyId: string, bedroomId: string): Promise<BedroomDetailResponse> {
   return apiRequest<BedroomDetailResponse>(`/api/property/${propertyId}/bedroom/${bedroomId}`);
 }

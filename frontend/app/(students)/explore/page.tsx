@@ -15,9 +15,12 @@ import {
   type BedroomDetailResponse,
   type BedroomMapResponse,
 } from "@/lib/api/property";
+import { addFavorite } from "@/lib/api/favorites";
+import { ApiError } from "@/lib/api/client";
 
 export default function ExplorePage() {
   const isHydrated = useAuthStore((state) => state.isHydrated);
+  const userId = useAuthStore((state) => state.session?.userId);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
     null,
   );
@@ -145,7 +148,20 @@ export default function ExplorePage() {
     }
   };
 
-  const handleMatch = () => {
+  const handleMatch = async () => {
+    if (userId && selectedBedroomId) {
+      try {
+        await addFavorite(userId, selectedBedroomId);
+        toast.success("Added to favorites");
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 409) {
+          toast.info("Already in your favorites");
+        } else {
+          toast.error("Failed to add to favorites");
+        }
+      }
+    }
+
     if (isSmartSuggestionMode) {
       handleNextSuggestion();
     } else {
