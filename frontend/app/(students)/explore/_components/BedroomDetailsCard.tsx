@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
 import { ImageGallery } from "./ImageGallery";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,6 +21,8 @@ import {
 } from "@/components/ui/tooltip";
 import { MapPin, Euro, Heart, ArrowDown } from "lucide-react";
 import type { BedroomResponse, PropertyResponse } from "@/lib/api/property";
+import { addFavorite, removeFavorite } from "@/lib/api/favorites";
+import { ApiError } from "@/lib/api/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { BedroomAmenityBadges } from "@/components/BedroomAmenityBadges";
 import { PropertyAmenityBadges } from "@/components/PropertyAmenityBadges";
@@ -32,6 +36,7 @@ const MOCK_IMAGES = [
 interface BedroomDetailsCardProps {
   bedroom: BedroomResponse;
   property: PropertyResponse;
+  userId?: string;
   onMatch: () => void;
   onClose?: () => void;
   onExitSmartSuggestion?: () => void;
@@ -41,11 +46,14 @@ interface BedroomDetailsCardProps {
 export function BedroomDetailsCard({
   bedroom,
   property,
+  userId,
   onMatch,
   onClose,
   onExitSmartSuggestion,
   onOpenDetails,
 }: BedroomDetailsCardProps) {
+  const [isFavorited, setIsFavorited] = useState(false);
+  const [popping, setPopping] = useState(false);
   // Use bedroom photos if available, fallback to property photos, then mock images
   const images =
     bedroom.photos?.length > 0
@@ -59,22 +67,45 @@ export function BedroomDetailsCard({
     return Number.isNaN(parsed.getTime()) ? value : parsed.toLocaleDateString();
   };
 
-  const handleCardClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (!onOpenDetails) {
-      return;
-    }
-
+  const handleCardClick = () => {
+    if (!onOpenDetails) return;
     onOpenDetails();
   };
 
   const handleCardKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    if (!onOpenDetails) {
-      return;
-    }
-
+    if (!onOpenDetails) return;
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       onOpenDetails();
+    }
+  };
+
+  const handleFavoriteToggle = async () => {
+    if (!userId) return;
+    setPopping(true);
+    setTimeout(() => setPopping(false), 200);
+
+    if (isFavorited) {
+      try {
+        await removeFavorite(userId, bedroom.id);
+        setIsFavorited(false);
+        toast.success("Removed from favorites");
+      } catch {
+        toast.error("Failed to remove from favorites");
+      }
+    } else {
+      try {
+        await addFavorite(userId, bedroom.id);
+        setIsFavorited(true);
+        toast.success("Added to favorites");
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 409) {
+          setIsFavorited(true);
+          toast.info("Already in your favorites");
+        } else {
+          toast.error("Failed to add to favorites");
+        }
+      }
     }
   };
 
@@ -148,11 +179,18 @@ export function BedroomDetailsCard({
 
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button variant="default" size="lg" onClick={onMatch}>
-                <Heart className="h-6 w-6" /> Add to Favorites
+              <Button
+                variant={isFavorited ? "destructive" : "default"}
+                size="lg"
+                onClick={handleFavoriteToggle}
+              >
+                <Heart
+                  className={`h-6 w-6 transition-transform duration-200 ${popping ? "scale-150" : "scale-100"} ${isFavorited ? "fill-current" : ""}`}
+                />
+                {isFavorited ? "Favorited" : "Add to Favorites"}
               </Button>
             </TooltipTrigger>
-            <TooltipContent>Match</TooltipContent>
+            <TooltipContent>{isFavorited ? "Remove from favorites" : "Add to favorites"}</TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </CardFooter>
