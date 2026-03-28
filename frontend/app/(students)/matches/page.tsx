@@ -6,6 +6,7 @@ import Image from "next/image";
 import Map, { Marker } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { getMatches, type BedroomMatchResponse } from "@/lib/api/property";
+import { addFavorite } from "@/lib/api/favorites";
 import { useAuthStore } from "@/lib/auth/store";
 import { BedroomAmenityBadges } from "@/components/BedroomAmenityBadges";
 import { PropertyAmenityBadges } from "@/components/PropertyAmenityBadges";
@@ -61,6 +62,9 @@ export default function MatchesPage() {
   };
 
   const swipe = (direction: "left" | "right") => {
+    if (direction === "right" && userId && matches.length > 0) {
+      addFavorite(userId, matches[0].bedroom.id).catch(() => {});
+    }
     setSwipeDirection(direction);
     setDragX(0);
     setTimeout(() => {
