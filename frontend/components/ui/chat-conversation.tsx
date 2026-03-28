@@ -57,11 +57,11 @@ export function ChatConversation({ data }: ChatConversationProps) {
   }
 
   return (
-    <div className="rounded-xl bg-card p-4 space-y-4">
+    <div className="rounded-xl bg-card p-4 space-y-4 min-h-full">
       {messages.map((message, index) => {
         const messageType = message.type ?? 'text'
         const isOwn = message.isOwn ?? false
-        const messageKey = message.content ? `${message.author || ''}-${message.content.slice(0, 40)}` : `msg-${index}`
+        const messageKey = (message as { id?: string }).id ?? `msg-${index}`
         return messageType === 'image' ? (
           <ImageMessageBubble
             key={messageKey}

@@ -15,14 +15,18 @@ const mockLandlord = {
   time: "3:45 PM",
 };
 
-const mockMessages: ChatMessage[] = [
+type Message = ChatMessage & { id: string };
+
+const mockMessages: Message[] = [
   {
+    id: "1",
     content: "Hi! I'm a student at Instituto Superior Técnico and I'm looking for an apartment near Alameda. Is the T1 in Arroios still available?",
     isOwn: true,
     time: "3:20 PM",
     status: "read" as const,
   },
   {
+    id: "2",
     content: "Hello! Yes, it's still available. It's a 5-minute walk from the Técnico campus. Are you looking for the full academic year?",
     author: "Miguel Santos",
     avatarFallback: "MS",
@@ -30,12 +34,14 @@ const mockMessages: ChatMessage[] = [
     time: "3:28 PM",
   },
   {
+    id: "3",
     content: "Yes, I need it from September to July. Does the €650/month include utilities?",
     isOwn: true,
     time: "3:35 PM",
     status: "read" as const,
   },
   {
+    id: "4",
     content: "Perfect! When would you like to schedule a visit?",
     author: "Miguel Santos",
     avatarFallback: "MS",
@@ -46,12 +52,12 @@ const mockMessages: ChatMessage[] = [
 
 export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
-  const [messages, setMessages] = useState(mockMessages);
+  const [messages, setMessages] = useState<Message[]>(mockMessages);
   const [input, setInput] = useState("");
 
   const handleSend = () => {
     if (!input.trim()) return;
-    setMessages([...messages, { content: input, isOwn: true, time: "Now", status: "sent" as const }]);
+    setMessages([...messages, { id: crypto.randomUUID(), content: input, isOwn: true, time: "Now", status: "sent" as const }]);
     setInput("");
   };
 
