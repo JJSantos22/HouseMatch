@@ -1,0 +1,22 @@
+CREATE TABLE search_preference (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    student_id UUID NOT NULL UNIQUE REFERENCES student(id) ON DELETE CASCADE,
+    min_price INT,
+    max_price INT,
+    min_stay_months INT,
+    available_from DATE,
+    furnished BOOLEAN,
+    private_bath BOOLEAN,
+    private_room BOOLEAN,
+    max_roommates INT,
+    max_bedrooms INT,
+    dishwasher BOOLEAN,
+    parking BOOLEAN,
+    ac BOOLEAN,
+    wifi BOOLEAN,
+    laundry TEXT CHECK (laundry IN ('BUILDING', 'HOUSE', 'NONE')),
+    center_lat DOUBLE PRECISION,
+    center_lng DOUBLE PRECISION,
+    radius_km INT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
