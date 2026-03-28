@@ -166,12 +166,16 @@ export default function HouseDetailsPage() {
     return images;
   }, [property, bedrooms]);
 
-  const lowestBedroomPrice = useMemo(() => {
+  const bedroomPriceRange = useMemo(() => {
     if (bedrooms.length === 0) {
       return null;
     }
 
-    return Math.min(...bedrooms.map((bedroom) => bedroom.price));
+    const prices = bedrooms.map((bedroom) => bedroom.price);
+    const min = Math.min(...prices);
+    const max = Math.max(...prices);
+
+    return { min, max };
   }, [bedrooms]);
 
   const currentImage = galleryImages[currentImageIndex];
@@ -344,8 +348,20 @@ export default function HouseDetailsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-lg font-semibold">
-                {lowestBedroomPrice !== null
-                  ? `${lowestBedroomPrice} EUR/month`
+                {bedroomPriceRange !== null
+                  ? bedroomPriceRange.min === bedroomPriceRange.max
+                    ? (
+                        <>
+                          €{bedroomPriceRange.min}
+                          <span className="text-muted-foreground">/month</span>
+                        </>
+                      )
+                    : (
+                        <>
+                          €{bedroomPriceRange.min} - {bedroomPriceRange.max}
+                          <span className="text-muted-foreground">/month</span>
+                        </>
+                      )
                   : "Price on request"}
               </div>
 
