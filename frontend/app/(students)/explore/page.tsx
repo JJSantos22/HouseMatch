@@ -15,8 +15,6 @@ import {
   type PropertyMapResponse,
   type BedroomDetailResponse,
 } from "@/lib/api/property";
-import { addFavorite } from "@/lib/api/favorites";
-import { ApiError } from "@/lib/api/client";
 
 export default function ExplorePage() {
   const router = useRouter();
@@ -133,20 +131,7 @@ export default function ExplorePage() {
     setSelectedBedroomId(bedroomId);
   };
 
-  const handleMatch = async () => {
-    if (userId && selectedBedroomId) {
-      try {
-        await addFavorite(userId, selectedBedroomId);
-        toast.success("Added to favorites");
-      } catch (error) {
-        if (error instanceof ApiError && error.status === 409) {
-          toast.info("Already in your favorites");
-        } else {
-          toast.error("Failed to add to favorites");
-        }
-      }
-    }
-
+  const handleMatch = () => {
     if (isSmartSuggestionMode) {
       handleNextSuggestion();
     } else {
@@ -232,6 +217,7 @@ export default function ExplorePage() {
             <BedroomDetailsCard
               bedroom={selectedBedroom.bedroom}
               property={selectedBedroom.property}
+              userId={userId}
               onMatch={handleMatch}
               onClose={handleClose}
               onExitSmartSuggestion={
