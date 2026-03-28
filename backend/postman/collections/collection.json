@@ -142,7 +142,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"John Student\",\n  \"university\": \"University of Lisbon\",\n  \"schedule\": \"NIGHT_OWL\",\n  \"social\": \"EXTROVERT\",\n  \"cleanliness\": \"MODERATE\",\n  \"academic\": \"BALANCED\",\n  \"lifestyle\": \"ADVENTUROUS\",\n  \"priority\": \"ERASMUS_MODE\"\n}"
+              "raw": "{\n  \"name\": \"John Student\",\n  \"university\": \"University of Lisbon\",\n  \"schedule\": \"NIGHT_OWL\",\n  \"social\": \"EXTROVERT\",\n  \"noise\": \"MEDIUM\",\n  \"academic\": \"BALANCED\",\n  \"cleanliness\": \"MODERATE\",\n  \"guest_frequency\": \"HIGH\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/profile",
@@ -184,6 +184,27 @@
               "path": [
                 "api",
                 "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rebuild Profile Embedding",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/profile/{{userId}}/embedding/rebuild",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "profile",
+                "{{userId}}",
+                "embedding",
+                "rebuild"
               ]
             }
           },
@@ -301,6 +322,121 @@
                 "property",
                 "{{propertyId}}",
                 "bedroom"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Student Matches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/property/matches/student/{{studentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "matches",
+                "student",
+                "{{studentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Bedroom Match",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/property/{{propertyId}}/bedroom/{{bedroomId}}/match/student/{{studentId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "{{propertyId}}",
+                "bedroom",
+                "{{bedroomId}}",
+                "match",
+                "student",
+                "{{studentId}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Property Traits",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/property/{{propertyId}}/traits",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "{{propertyId}}",
+                "traits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Property Traits",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"schedule\": \"BALANCED\",\n  \"social\": \"AMBIVERT\",\n  \"noise\": \"LOW\",\n  \"academic\": \"BALANCED\",\n  \"cleanliness\": \"MODERATE\",\n  \"guest_frequency\": \"MEDIUM\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/property/{{propertyId}}/traits",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "{{propertyId}}",
+                "traits"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rebuild Property Embedding",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/property/{{propertyId}}/embedding/rebuild",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "property",
+                "{{propertyId}}",
+                "embedding",
+                "rebuild"
               ]
             }
           },

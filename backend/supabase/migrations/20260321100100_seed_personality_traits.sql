@@ -9,6 +9,10 @@ INSERT INTO personality_trait (category, level, description) VALUES
 ('SOCIAL', 'AMBIVERT', 'balanced, flexible'),
 ('SOCIAL', 'EXTROVERT', 'enjoys frequent social interaction'),
 
+('NOISE', 'LOW', 'minimal noise, quiet environments'),
+('NOISE', 'MEDIUM', 'balanced, some noise'),
+('NOISE', 'HIGH', 'lively, noisy environments'),
+
 ('CLEANLINESS', 'RELAXED', 'tolerates mess, cleans occasionally'),
 ('CLEANLINESS', 'MODERATE', 'keeps things reasonably tidy'),
 ('CLEANLINESS', 'STRICT', 'prefers everything clean and organized'),
@@ -17,11 +21,12 @@ INSERT INTO personality_trait (category, level, description) VALUES
 ('ACADEMIC', 'BALANCED', 'regular study routine, flexible'),
 ('ACADEMIC', 'INTENSIVE', 'highly focused, frequent studying'),
 
-('LIFESTYLE', 'HOMEBODY', 'prefers staying in'),
-('LIFESTYLE', 'FLEXIBLE', 'mix of both'),
-('LIFESTYLE', 'ADVENTUROUS', 'frequently out, active social life'),
-
+('GUEST_FREQUENCY', 'LOW', 'prefers few guests, values privacy'),
+('GUEST_FREQUENCY', 'MEDIUM', 'open to guests, occasional socializing'),
+('GUEST_FREQUENCY', 'HIGH', 'enjoys having guests over frequently');
+/* 
 ('PRIORITY', 'FITNESS_FOCUSED', 'prioritizes fitness and health'),
 ('PRIORITY', 'HUSTLE_MODE', 'focused on work and career goals'),
 ('PRIORITY', 'PARTY_DRIVEN', 'enjoys nightlife and social events'),
 ('PRIORITY', 'ERASMUS_MODE', 'focused on the exchange experience');
+ */

@@ -1,17 +1,31 @@
 package com.tecstorm.housematch.controller;
 
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.tecstorm.housematch.dto.BedroomDetailResponse;
+import com.tecstorm.housematch.dto.BedroomMatchResponse;
+import com.tecstorm.housematch.dto.BedroomMatchesResponse;
 import com.tecstorm.housematch.dto.BedroomsDetailResponse;
 import com.tecstorm.housematch.dto.PropertyMapResponse;
 import com.tecstorm.housematch.dto.PropertyResponse;
+import com.tecstorm.housematch.dto.PropertyTraitsResponse;
 import com.tecstorm.housematch.dto.ReviewResponse;
+import com.tecstorm.housematch.dto.UpdatePropertyTraitsRequest;
+import com.tecstorm.housematch.service.BedroomMatchingService;
 import com.tecstorm.housematch.service.BedroomService;
 import com.tecstorm.housematch.service.PropertyService;
+import com.tecstorm.housematch.service.PropertyTraitService;
 import com.tecstorm.housematch.service.ReviewService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/property")
@@ -20,11 +34,20 @@ public class PropertyController {
     private final PropertyService propertyService;
     private final BedroomService bedroomService;
     private final ReviewService reviewService;
+    private final BedroomMatchingService bedroomMatchingService;
+    private final PropertyTraitService propertyTraitService;
 
-    public PropertyController(PropertyService propertyService, BedroomService bedroomService, ReviewService reviewService) {
+    public PropertyController(
+        PropertyService propertyService,
+        BedroomService bedroomService, ReviewService reviewService,
+        BedroomMatchingService bedroomMatchingService,
+        PropertyTraitService propertyTraitService
+    ) {
         this.propertyService = propertyService;
         this.bedroomService = bedroomService;
         this.reviewService = reviewService;
+        this.bedroomMatchingService = bedroomMatchingService;
+        this.propertyTraitService = propertyTraitService;
     }
 
     @GetMapping("/map")
@@ -55,5 +78,41 @@ public class PropertyController {
     public ResponseEntity<List<ReviewResponse>> getReviewsByPropertyId(
             @PathVariable UUID propertyId) {
         return ResponseEntity.ok(reviewService.getByPropertyId(propertyId));
+    }
+
+    @GetMapping("/matches/student/{studentId}")
+    public ResponseEntity<BedroomMatchesResponse> getMatchesByStudentId(@PathVariable UUID studentId) {
+        return ResponseEntity.ok(bedroomMatchingService.getMatchesByStudentId(studentId));
+    }
+
+    @GetMapping("/{propertyId}/bedroom/{bedroomId}/match/student/{studentId}")
+    public ResponseEntity<BedroomMatchResponse> getBedroomMatch(
+        @PathVariable UUID propertyId,
+        @PathVariable UUID bedroomId,
+        @PathVariable UUID studentId
+    ) {
+        return ResponseEntity.ok(bedroomMatchingService.getMatch(propertyId, bedroomId, studentId));
+    }
+
+    @GetMapping("/{propertyId}/traits")
+    public ResponseEntity<PropertyTraitsResponse> getPropertyTraits(
+        @PathVariable UUID propertyId
+    ) {
+        return ResponseEntity.ok(propertyTraitService.get(propertyId));
+    }
+
+    @PutMapping("/{propertyId}/traits")
+    public ResponseEntity<Void> updatePropertyTraits(
+        @PathVariable UUID propertyId,
+        @RequestBody UpdatePropertyTraitsRequest request
+    ) {
+        propertyTraitService.update(propertyId, request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{propertyId}/embedding/rebuild")
+    public ResponseEntity<Void> rebuildPropertyEmbedding(@PathVariable UUID propertyId) {
+        propertyTraitService.rebuildEmbedding(propertyId);
+        return ResponseEntity.noContent().build();
     }
 }

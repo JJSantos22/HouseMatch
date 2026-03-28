@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS vector;
+
 CREATE TYPE user_role AS ENUM ('student', 'landlord');
 
 CREATE TABLE profile (
@@ -5,6 +7,7 @@ CREATE TABLE profile (
   email TEXT NOT NULL UNIQUE,
   password TEXT NOT NULL,
   name TEXT,
+  embedding vector(6),
   role user_role NOT NULL,
   created_at TIMESTAMPTZ DEFAULT now()
 );

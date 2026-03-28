@@ -2,6 +2,7 @@ package com.tecstorm.housematch.integration.repository;
 
 import com.tecstorm.housematch.entities.ProfileEntity;
 import com.tecstorm.housematch.repository.ProfileRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,6 +12,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
+@Disabled("Requires a running local Postgres/Supabase instance")
 class ProfileRepositoryIntegrationTest {
 
     @Autowired

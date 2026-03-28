@@ -12,32 +12,31 @@ const personalityLevelSchema = z.enum([
   "INTROVERT",
   "AMBIVERT",
   "EXTROVERT",
+  // Noise
+  "LOW",
+  "MEDIUM",
+  "HIGH",
+  // Academic
+  "CASUAL",
+  "INTENSIVE",
   // Cleanliness
   "RELAXED",
   "MODERATE",
   "STRICT",
-  // Academic
-  "CASUAL",
-  "INTENSIVE",
-  // Lifestyle
-  "HOMEBODY",
-  "FLEXIBLE",
-  "ADVENTUROUS",
-  // Priority
-  "FITNESS_FOCUSED",
-  "HUSTLE_MODE",
-  "PARTY_DRIVEN",
-  "ERASMUS_MODE",
+  // Guest frequency
+  "LOW",
+  "MEDIUM",
+  "HIGH",
 ]);
 
 // Personality traits object
 const personalityTraitsSchema = z.object({
   schedule: personalityLevelSchema,
   social: personalityLevelSchema,
-  cleanliness: personalityLevelSchema,
+  noise: personalityLevelSchema,
   academic: personalityLevelSchema,
-  lifestyle: personalityLevelSchema,
-  priority: personalityLevelSchema,
+  cleanliness: personalityLevelSchema,
+  guest_frequency: personalityLevelSchema,
 });
 
 // PUT request schema (snake_case for backend)
@@ -47,10 +46,10 @@ const updateProfileRequestSchema = z.object({
   phone: z.string().optional(),
   schedule: personalityLevelSchema,
   social: personalityLevelSchema,
-  cleanliness: personalityLevelSchema,
+  noise: personalityLevelSchema,
   academic: personalityLevelSchema,
-  lifestyle: personalityLevelSchema,
-  priority: personalityLevelSchema,
+  cleanliness: personalityLevelSchema,
+  guest_frequency: personalityLevelSchema,
 });
 
 // GET response schema with snake_case → camelCase transform
@@ -84,46 +83,42 @@ function mapFormValueToPersonalityLevel(
   if (field === "sleepSchedule") {
     if (value === "early-bird") return "EARLY_BIRD";
     if (value === "night-owl") return "NIGHT_OWL";
-    return "BALANCED"; // "normal" → BALANCED
+    if (value === "normal") return "BALANCED"; // "normal" → BALANCED
   }
 
   // Social preference mapping
   if (field === "socialPreference") {
     if (value === "introverted") return "INTROVERT";
     if (value === "balanced") return "AMBIVERT";
-    // "social" or "very-social" → EXTROVERT
-    return "EXTROVERT";
+    if (value === "social") return "EXTROVERT";
   }
 
-  // Cleanliness level mapping
-  if (field === "cleanlinessLevel") {
-    if (value === "relaxed") return "RELAXED";
-    if (value === "very-clean") return "STRICT";
-    // "clean" or "average" → MODERATE
-    return "MODERATE";
+  // Noise mapping
+  if (field === "noise") {
+    if (value === "low") return "LOW";
+    if (value === "medium") return "MEDIUM";
+    if (value === "high") return "HIGH";
   }
 
   // Academic focus mapping
   if (field === "academic") {
     if (value === "casual") return "CASUAL";
     if (value === "intensive") return "INTENSIVE";
-    return "BALANCED";
+    if (value === "balanced") return "BALANCED";
   }
 
-  // Lifestyle mapping
-  if (field === "lifestyle") {
-    if (value === "homebody") return "HOMEBODY";
-    if (value === "adventurous") return "ADVENTUROUS";
-    return "FLEXIBLE";
+  // Cleanliness level mapping
+  if (field === "cleanlinessLevel") {
+    if (value === "relaxed") return "RELAXED";
+    if (value === "very-clean") return "STRICT";
+    if (value === "average") return "MODERATE"; 
   }
 
-  // Priority mapping
-  if (field === "priority") {
-    if (value === "fitness") return "FITNESS_FOCUSED";
-    if (value === "career") return "HUSTLE_MODE";
-    if (value === "social") return "PARTY_DRIVEN";
-    if (value === "erasmus") return "ERASMUS_MODE";
-    return "HUSTLE_MODE"; // default for students
+  // Guest frequency mapping
+  if (field === "guestFrequency") {
+    if (value === "low") return "LOW";
+    if (value === "medium") return "MEDIUM";
+    if (value === "high") return "HIGH";
   }
 
   throw new Error(`Unknown field for personality level mapping: ${field}`);
@@ -150,11 +145,11 @@ function mapPersonalityLevelToFormValue(
     return "social";
   }
 
-  // Cleanliness level reverse mapping
-  if (field === "cleanlinessLevel") {
-    if (value === "RELAXED") return "relaxed";
-    if (value === "STRICT") return "very-clean";
-    return "average";
+  // Noise reverse mapping
+  if (field === "noise") {
+    if (value === "LOW") return "low";
+    if (value === "MEDIUM") return "medium";
+    return "high";
   }
 
   // Academic focus reverse mapping
@@ -164,20 +159,18 @@ function mapPersonalityLevelToFormValue(
     return "balanced";
   }
 
-  // Lifestyle reverse mapping
-  if (field === "lifestyle") {
-    if (value === "HOMEBODY") return "homebody";
-    if (value === "ADVENTUROUS") return "adventurous";
-    return "flexible";
+  // Cleanliness level reverse mapping
+  if (field === "cleanlinessLevel") {
+    if (value === "RELAXED") return "relaxed";
+    if (value === "STRICT") return "very-clean";
+    return "average";
   }
 
-  // Priority reverse mapping
-  if (field === "priority") {
-    if (value === "FITNESS_FOCUSED") return "fitness";
-    if (value === "HUSTLE_MODE") return "career";
-    if (value === "PARTY_DRIVEN") return "social";
-    if (value === "ERASMUS_MODE") return "erasmus";
-    return "career";
+  // Guest frequency reverse mapping
+  if (field === "guestFrequency") {
+    if (value === "LOW") return "low";
+    if (value === "MEDIUM") return "medium";
+    return "high";
   }
 
   return "";
@@ -198,13 +191,13 @@ export function mapProfileDataToUpdateRequest(
       "socialPreference",
       data.socialPreference,
     ),
+    noise: mapFormValueToPersonalityLevel("noise", data.noise),
+    academic: mapFormValueToPersonalityLevel("academic", data.academic),
     cleanliness: mapFormValueToPersonalityLevel(
       "cleanlinessLevel",
       data.cleanlinessLevel,
     ),
-    academic: mapFormValueToPersonalityLevel("academic", data.academic),
-    lifestyle: mapFormValueToPersonalityLevel("lifestyle", data.lifestyle),
-    priority: mapFormValueToPersonalityLevel("priority", data.priority),
+    guest_frequency: mapFormValueToPersonalityLevel("guestFrequency", data.guestFrequency),
   };
 }
 
@@ -224,10 +217,10 @@ export function mapProfileResponseToProfileData(
       phone: response.phone || "",
       sleepSchedule: "",
       socialPreference: "",
-      cleanlinessLevel: "",
+      noise: "",
       academic: "",
-      lifestyle: "",
-      priority: "",
+      cleanlinessLevel: "",
+      guestFrequency: "",
     };
   }
 
@@ -240,13 +233,13 @@ export function mapProfileResponseToProfileData(
       "socialPreference",
       traits.social,
     ),
+    noise: mapPersonalityLevelToFormValue("noise", traits.noise),
+    academic: mapPersonalityLevelToFormValue("academic", traits.academic),
     cleanlinessLevel: mapPersonalityLevelToFormValue(
       "cleanlinessLevel",
       traits.cleanliness,
     ),
-    academic: mapPersonalityLevelToFormValue("academic", traits.academic),
-    lifestyle: mapPersonalityLevelToFormValue("lifestyle", traits.lifestyle),
-    priority: mapPersonalityLevelToFormValue("priority", traits.priority),
+    guestFrequency: mapPersonalityLevelToFormValue("guestFrequency", traits.guest_frequency),
   };
 }
 

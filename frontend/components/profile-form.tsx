@@ -28,10 +28,10 @@ import {
   Phone,
   Moon,
   Users,
+  Volume2,
   Sparkles,
   BookOpen,
-  Compass,
-  Target,
+  UserRoundPlus,
 } from "lucide-react";
 import { FormEvent, useState, useMemo } from "react";
 
@@ -41,10 +41,10 @@ export type ProfileData = {
   phone: string;
   sleepSchedule: string;
   socialPreference: string;
-  cleanlinessLevel: string;
+  noise: string;
   academic: string;
-  lifestyle: string;
-  priority: string;
+  cleanlinessLevel: string;
+  guestFrequency: string;
 };
 
 type ProfileFormProps = {
@@ -77,10 +77,10 @@ export function ProfileForm({
       phone: initialData.phone || "",
       sleepSchedule: initialData.sleepSchedule || "",
       socialPreference: initialData.socialPreference || "",
-      cleanlinessLevel: initialData.cleanlinessLevel || "",
+      noise: initialData.noise || "",
       academic: initialData.academic || "",
-      lifestyle: initialData.lifestyle || "",
-      priority: initialData.priority || "",
+      cleanlinessLevel: initialData.cleanlinessLevel || "",
+      guestFrequency: initialData.guestFrequency || "",
     }),
     [initialData],
   );
@@ -315,30 +315,30 @@ export function ProfileForm({
 
                   <Field>
                     <FieldLabel
-                      htmlFor="lifestyle"
+                      htmlFor="noise"
                       className="flex items-center gap-2"
                     >
-                      <Compass className="h-4 w-4" />
-                      Lifestyle
+                      <Volume2 className="h-4 w-4" />
+                      Noise Level
                     </FieldLabel>
                     <Select
-                      value={formData.lifestyle}
+                      value={formData.noise}
                       onValueChange={(value) =>
-                        handleInputChange("lifestyle", value)
+                        handleInputChange("noise", value)
                       }
                     >
-                      <SelectTrigger id="lifestyle" className="w-full">
-                        <SelectValue placeholder="Select lifestyle" />
+                      <SelectTrigger id="noise" className="w-full">
+                        <SelectValue placeholder="Select noise level" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="homebody">
-                          Homebody - Prefer staying in
+                        <SelectItem value="low">
+                          Low - Prefer a quiet space
                         </SelectItem>
-                        <SelectItem value="flexible">
-                          Flexible - Mix of both
+                        <SelectItem value="medium">
+                          Medium - Comfortable with some activity
                         </SelectItem>
-                        <SelectItem value="adventurous">
-                          Adventurous - Love going out
+                        <SelectItem value="high">
+                          High - Fine with a lively environment
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -346,30 +346,25 @@ export function ProfileForm({
 
                   <Field>
                     <FieldLabel
-                      htmlFor="priority"
+                      htmlFor="guestFrequency"
                       className="flex items-center gap-2"
                     >
-                      <Target className="h-4 w-4" />
-                      Main Priority
+                      <UserRoundPlus className="h-4 w-4" />
+                      Guest Frequency
                     </FieldLabel>
                     <Select
-                      value={formData.priority}
+                      value={formData.guestFrequency}
                       onValueChange={(value) =>
-                        handleInputChange("priority", value)
+                        handleInputChange("guestFrequency", value)
                       }
                     >
-                      <SelectTrigger id="priority" className="w-full">
-                        <SelectValue placeholder="Select main priority" />
+                      <SelectTrigger id="guestFrequency" className="w-full">
+                        <SelectValue placeholder="Select guest frequency" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="fitness">Fitness Focused</SelectItem>
-                        <SelectItem value="career">
-                          Career / Hustle Mode
-                        </SelectItem>
-                        <SelectItem value="social">Social / Party</SelectItem>
-                        <SelectItem value="erasmus">
-                          Erasmus / International Experience
-                        </SelectItem>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
                       </SelectContent>
                     </Select>
                   </Field>
