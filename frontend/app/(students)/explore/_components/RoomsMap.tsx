@@ -70,7 +70,7 @@ export function RoomsMap({
         latitude: 38.7223,
         zoom: 12,
       }}
-      style={{ width: "100%", height: "auto" }}
+      style={{ width: "100%", height: "100%" }}
       mapStyle="/map-style.json"
       attributionControl={false}
     >
