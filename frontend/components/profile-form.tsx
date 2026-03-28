@@ -1,6 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Field,
@@ -19,6 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import {
@@ -34,6 +41,31 @@ import {
   UserRoundPlus,
 } from "lucide-react";
 import { FormEvent, useState, useMemo } from "react";
+import { Separator } from "./ui/separator";
+
+const ADVANCED_WEIGHT_DEFAULT = 3;
+
+const advancedPreferenceParameters = [
+  { key: "sleepSchedule", label: "Sleep Schedule" },
+  { key: "socialPreference", label: "Social Preference" },
+  { key: "cleanlinessLevel", label: "Cleanliness Level" },
+  { key: "academic", label: "Academic Focus" },
+  { key: "noise", label: "Noise Level" },
+  { key: "guestFrequency", label: "Guest Frequency" },
+] as const;
+
+type AdvancedPreferenceWeightKey =
+  (typeof advancedPreferenceParameters)[number]["key"];
+type AdvancedPreferenceWeights = Record<AdvancedPreferenceWeightKey, number>;
+
+const advancedPreferenceWeightsDefault: AdvancedPreferenceWeights = {
+  sleepSchedule: ADVANCED_WEIGHT_DEFAULT,
+  socialPreference: ADVANCED_WEIGHT_DEFAULT,
+  cleanlinessLevel: ADVANCED_WEIGHT_DEFAULT,
+  academic: ADVANCED_WEIGHT_DEFAULT,
+  noise: ADVANCED_WEIGHT_DEFAULT,
+  guestFrequency: ADVANCED_WEIGHT_DEFAULT,
+};
 
 export type ProfileData = {
   fullName: string;
@@ -87,9 +119,18 @@ export function ProfileForm({
 
   const [formData, setFormData] = useState<ProfileData>(initialFormData);
   const [error, setError] = useState<string | null>(null);
+  const [advancedPreferenceWeights, setAdvancedPreferenceWeights] =
+    useState<AdvancedPreferenceWeights>(advancedPreferenceWeightsDefault);
 
   const handleInputChange = (field: keyof ProfileData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleAdvancedPreferenceWeightChange = (
+    parameter: AdvancedPreferenceWeightKey,
+    value: number,
+  ) => {
+    setAdvancedPreferenceWeights((prev) => ({ ...prev, [parameter]: value }));
   };
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -370,6 +411,61 @@ export function ProfileForm({
                   </Field>
                 </FieldGroup>
               </FieldSet>
+
+              <Separator />
+
+              <Accordion type="single" collapsible>
+                <AccordionItem value="advanced-preferences">
+                  <AccordionTrigger>Advanced Preferences</AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-4 pt-1">
+                      <FieldDescription>
+                        Set how important each parameter is for matching.
+                      </FieldDescription>
+                      {advancedPreferenceParameters.map(({ key, label }) => {
+                        const currentWeight = advancedPreferenceWeights[key];
+
+                        return (
+                          <Field key={key}>
+                            <div className="flex items-center justify-between">
+                              <FieldLabel htmlFor={`weight-${key}`}>
+                                {label}
+                              </FieldLabel>
+                              <span className="text-sm font-medium text-muted-foreground tabular-nums">
+                                {currentWeight}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-3 pt-1">
+                              <span className="w-8 shrink-0 text-xs text-muted-foreground">
+                                Low
+                              </span>
+                              <Slider
+                                id={`weight-${key}`}
+                                className="flex-1"
+                                min={1}
+                                max={5}
+                                step={1}
+                                value={[currentWeight]}
+                                onValueChange={([value]) =>
+                                  handleAdvancedPreferenceWeightChange(
+                                    key,
+                                    value,
+                                  )
+                                }
+                              />
+                              <span className="w-8 shrink-0 text-right text-xs text-muted-foreground">
+                                High
+                              </span>
+                            </div>
+                          </Field>
+                        );
+                      })}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+
+              <Separator />
 
               {error && (
                 <FieldDescription className="text-red-600">
