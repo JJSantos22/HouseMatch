@@ -1,0 +1,2 @@
+ALTER TABLE IF EXISTS property
+ADD COLUMN IF NOT EXISTS embedding vector(6);

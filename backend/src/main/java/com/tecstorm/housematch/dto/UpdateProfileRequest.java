@@ -9,8 +9,8 @@ public record UpdateProfileRequest(
     @JsonProperty("phone") String phone,
     @JsonProperty("schedule") PersonalityLevel schedule,
     @JsonProperty("social") PersonalityLevel social,
-    @JsonProperty("cleanliness") PersonalityLevel cleanliness,
+    @JsonProperty("noise") PersonalityLevel noise,
     @JsonProperty("academic") PersonalityLevel academic,
-    @JsonProperty("lifestyle") PersonalityLevel lifestyle,
-    @JsonProperty("priority") PersonalityLevel priority
+    @JsonProperty("cleanliness") PersonalityLevel cleanliness,
+    @JsonProperty("guest_frequency") PersonalityLevel guest_frequency
 ) {}

@@ -1,0 +1,11 @@
+CREATE EXTENSION IF NOT EXISTS vector;
+
+ALTER TABLE IF EXISTS profile
+ADD COLUMN IF NOT EXISTS embedding vector(6);
+
+ALTER TABLE IF EXISTS profile
+ALTER COLUMN embedding TYPE vector(6)
+USING CASE
+  WHEN embedding IS NULL THEN NULL
+  ELSE embedding::vector(6)
+END;

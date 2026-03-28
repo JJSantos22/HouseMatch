@@ -1,5 +1,5 @@
 package com.tecstorm.housematch.entities;
 
 public enum PersonalityCategory {
-    SCHEDULE, SOCIAL, CLEANLINESS, ACADEMIC, LIFESTYLE, PRIORITY
+    SCHEDULE, SOCIAL, NOISE, ACADEMIC, CLEANLINESS, GUEST_FREQUENCY
 }
