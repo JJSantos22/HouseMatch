@@ -188,6 +188,38 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Update Search Preferences",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "X-User-Id",
+                "value": "{{userId}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"min_price\": 300,\n  \"max_price\": 600,\n  \"furnished\": true,\n  \"private_bath\": true,\n  \"wifi\": true,\n  \"center_lat\": 38.7223,\n  \"center_lng\": -9.1393,\n  \"radius_km\": 5\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profile/search-preferences",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "profile",
+                "search-preferences"
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "id": "e088c48e-2e8e-411f-80ad-fe79f40f4e10"
