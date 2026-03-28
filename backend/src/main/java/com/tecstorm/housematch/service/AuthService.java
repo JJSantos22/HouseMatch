@@ -14,11 +14,13 @@ public class AuthService {
     private final ProfileRepository profileRepository;
     private final StudentRepository studentRepository;
     private final LandlordRepository landlordRepository;
+    private final SearchPreferenceRepository searchPreferenceRepository;
 
-    public AuthService(ProfileRepository profileRepository, StudentRepository studentRepository, LandlordRepository landlordRepository) {
+    public AuthService(ProfileRepository profileRepository, StudentRepository studentRepository, LandlordRepository landlordRepository, SearchPreferenceRepository searchPreferenceRepository) {
         this.profileRepository = profileRepository;
         this.studentRepository = studentRepository;
         this.landlordRepository = landlordRepository;
+        this.searchPreferenceRepository = searchPreferenceRepository;
     }
 
     @Transactional
@@ -31,7 +33,8 @@ public class AuthService {
         ProfileEntity saved = profileRepository.save(profile);
 
         if (request.role() == UserRole.student) {
-            studentRepository.save(new StudentEntity(saved, null));
+            StudentEntity student = studentRepository.save(new StudentEntity(saved, null));
+            searchPreferenceRepository.save(new SearchPreferenceEntity(student));
         } else {
             landlordRepository.save(new LandlordEntity(saved, null));
         }
