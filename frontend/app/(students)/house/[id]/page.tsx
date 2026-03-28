@@ -25,9 +25,7 @@ import {
   Wind,
 } from "lucide-react";
 import {
-  getBedroomDetail,
-  getPropertiesForMap,
-  getPropertyById,
+  getBedroomsByPropertyId,
   type BedroomResponse,
   type PropertyResponse,
 } from "@/lib/api/property";
@@ -137,33 +135,11 @@ export default function HouseDetailsPage() {
       try {
         setIsLoading(true);
 
-        const [propertyData, mapProperties] = await Promise.all([
-          getPropertyById(propertyId),
-          getPropertiesForMap(),
-        ]);
+        const detailsData = await getBedroomsByPropertyId(propertyId);
 
-        const mapProperty = mapProperties.find(
-          (item) => item.id === propertyId,
-        );
-        const bedroomIds =
-          mapProperty?.bedrooms.map((bedroom) => bedroom.id) ?? [];
-
-        const detailedBedrooms = (
-          await Promise.all(
-            bedroomIds.map(async (bedroomId) => {
-              try {
-                const detail = await getBedroomDetail(propertyId, bedroomId);
-                return detail.bedroom;
-              } catch {
-                return null;
-              }
-            }),
-          )
-        ).filter((bedroom): bedroom is BedroomResponse => bedroom !== null);
-
-        setProperty(propertyData);
-        setBedrooms(detailedBedrooms);
-        setReviews(getMockReviews(propertyId, propertyData.title));
+        setProperty(detailsData.property);
+        setBedrooms(detailsData.bedrooms);
+        setReviews(getMockReviews(propertyId, detailsData.property.title));
       } catch (error) {
         console.error("Failed to load house details:", error);
         toast.error("Failed to load house details");
