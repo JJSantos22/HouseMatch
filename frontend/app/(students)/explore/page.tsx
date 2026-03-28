@@ -18,20 +18,26 @@ import {
 
 export default function ExplorePage() {
   const isHydrated = useAuthStore((state) => state.isHydrated);
-  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
-  const [selectedBedroomId, setSelectedBedroomId] = useState<string | null>(null);
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
+    null,
+  );
+  const [selectedBedroomId, setSelectedBedroomId] = useState<string | null>(
+    null,
+  );
   const [isMobile, setIsMobile] = useState(false);
   const [properties, setProperties] = useState<PropertyMapResponse[]>([]);
-  const [selectedBedroom, setSelectedBedroom] = useState<BedroomDetailResponse | null>(null);
+  const [selectedBedroom, setSelectedBedroom] =
+    useState<BedroomDetailResponse | null>(null);
   const [isLoadingProperties, setIsLoadingProperties] = useState(true);
   const [isSmartSuggestionMode, setIsSmartSuggestionMode] = useState(false);
   const [smartSuggestions, setSmartSuggestions] = useState<string[]>([]);
   const [currentSuggestionIndex, setCurrentSuggestionIndex] = useState(0);
-  const [isLoadingSmartSuggestions, setIsLoadingSmartSuggestions] = useState(false);
+  const [isLoadingSmartSuggestions, setIsLoadingSmartSuggestions] =
+    useState(false);
 
-  const selectedProperty = useMemo(() => 
-    properties.find((p) => p.id === selectedPropertyId) ?? null,
-    [properties, selectedPropertyId]
+  const selectedProperty = useMemo(
+    () => properties.find((p) => p.id === selectedPropertyId) ?? null,
+    [properties, selectedPropertyId],
   );
 
   // Fetch all properties on mount
@@ -70,7 +76,10 @@ export default function ExplorePage() {
       }
 
       try {
-        const data = await getBedroomDetail(selectedPropertyId, selectedBedroomId);
+        const data = await getBedroomDetail(
+          selectedPropertyId,
+          selectedBedroomId,
+        );
         setSelectedBedroom(data);
       } catch (error) {
         console.error("Failed to fetch bedroom details:", error);
@@ -180,6 +189,10 @@ export default function ExplorePage() {
     setCurrentSuggestionIndex(0);
   };
 
+  const handleClose = () => {
+    setSelectedPropertyId(null);
+  };
+
   if (!isHydrated || isLoadingProperties) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
@@ -210,7 +223,7 @@ export default function ExplorePage() {
 
       {selectedBedroom && selectedProperty && (
         <div className="pointer-events-none absolute inset-0 flex items-end justify-center md:items-start md:justify-start">
-          <div className="pointer-events-auto flex flex-col md:flex-row gap-2 p-4 md:p-6 w-full max-w-md md:max-w-none md:w-auto">
+          <div className="pointer-events-auto flex flex-col md:flex-row gap-2 p-4 md:p-6 w-full max-h-full max-w-md md:max-w-none md:w-auto">
             {selectedProperty.bedrooms.length > 1 && isMobile && (
               <BedroomList
                 bedrooms={selectedProperty.bedrooms}
@@ -225,6 +238,7 @@ export default function ExplorePage() {
               onDiscard={handleDiscard}
               onSkip={handleSkip}
               onMatch={handleMatch}
+              onClose={handleClose}
               onExitSmartSuggestion={
                 isSmartSuggestionMode ? handleExitSmartSuggestions : undefined
               }

@@ -1,10 +1,10 @@
 -- Seed properties
-INSERT INTO property (title, address, lat, lng, total_people, total_bedrooms, total_bathrooms, laundry, dishwasher, parking, ac, wifi, photos) VALUES
-('Cozy Apartment in Baixa', 'Rua Augusta 10, Lisboa', 38.7223, -9.1393, 3, 2, 2, 'HOUSE', TRUE, FALSE, TRUE, TRUE, ARRAY['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop']),
-('Modern Flat in Alfama', 'Rua de São Miguel 25, Lisboa', 38.7369, -9.1428, 1, 1, 1, 'BUILDING', FALSE, TRUE, TRUE, TRUE, ARRAY['https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&h=600&fit=crop']),
-('Spacious House in Belém', 'Rua de Belém 80, Lisboa', 38.7169, -9.1333, 6, 3, 2, 'HOUSE', TRUE, FALSE, FALSE, TRUE, ARRAY['https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=600&fit=crop']),
-('Central Flat in Chiado', 'Rua Garrett 45, Lisboa', 38.7282, -9.1501, 1, 1, 1, 'BUILDING', FALSE, TRUE, TRUE, TRUE, ARRAY['https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=800&h=600&fit=crop']),
-('Modern Studio in Parque das Nações', 'Av. Dom João II 30, Lisboa', 38.7156, -9.1478, 1, 1, 1, 'BUILDING', TRUE, TRUE, TRUE, TRUE, ARRAY['https://images.unsplash.com/photo-1494526585095-c41746248156?w=800&h=600&fit=crop']);
+INSERT INTO property (title, address, lat, lng, total_people, total_bedrooms, total_bathrooms, laundry, dishwasher, parking, ac, wifi, size_sqft, photos) VALUES
+('Cozy Apartment in Baixa', 'Rua Augusta 10, Lisboa', 38.7223, -9.1393, 3, 2, 2, 'HOUSE', TRUE, FALSE, TRUE, TRUE, 850, ARRAY['https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=600&fit=crop']),
+('Modern Flat in Alfama', 'Rua de São Miguel 25, Lisboa', 38.7369, -9.1428, 1, 1, 1, 'BUILDING', FALSE, TRUE, TRUE, TRUE, 450, ARRAY['https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=800&h=600&fit=crop']),
+('Spacious House in Belém', 'Rua de Belém 80, Lisboa', 38.7169, -9.1333, 6, 3, 2, 'HOUSE', TRUE, FALSE, FALSE, TRUE, 1200, ARRAY['https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=800&h=600&fit=crop']),
+('Central Flat in Chiado', 'Rua Garrett 45, Lisboa', 38.7282, -9.1501, 1, 1, 1, 'BUILDING', FALSE, TRUE, TRUE, TRUE, 500, ARRAY['https://images.unsplash.com/photo-1560185893-a55cbc8c57e8?w=800&h=600&fit=crop']),
+('Modern Studio in Parque das Nações', 'Av. Dom João II 30, Lisboa', 38.7156, -9.1478, 1, 1, 1, 'BUILDING', TRUE, TRUE, TRUE, TRUE, 400, ARRAY['https://images.unsplash.com/photo-1494526585095-c41746248156?w=800&h=600&fit=crop']);
 
 -- Seed bedrooms
 INSERT INTO bedroom (property_id, title, total_people, total_beds, price, size_sqft, furnished, private_bath, available_from_date, available_to_date, min_stay_months, photos, is_active)

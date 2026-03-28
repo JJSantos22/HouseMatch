@@ -3,15 +3,16 @@
 import { useState } from "react";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
 interface ImageGalleryProps {
   images: string[];
+  onClose?: () => void;
 }
 
-export function ImageGallery({ images }: ImageGalleryProps) {
+export function ImageGallery({ images, onClose }: ImageGalleryProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
@@ -47,6 +48,20 @@ export function ImageGallery({ images }: ImageGalleryProps) {
           sizes="(max-width: 768px) 100vw, 448px"
           unoptimized
         />
+
+        {onClose && (
+          <Button
+            variant="secondary"
+            size="icon"
+            className="absolute right-2 top-2 z-10 shadow-lg"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        )}
 
         {images.length > 1 && (
           <>
