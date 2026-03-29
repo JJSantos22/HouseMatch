@@ -42,7 +42,7 @@ const personalityTraitsSchema = z.object({
 // PUT request schema (snake_case for backend)
 const updateProfileRequestSchema = z.object({
   name: z.string().min(1),
-  university: z.string().min(1),
+  university: z.string().min(1).optional(),
   phone: z.string().optional(),
   schedule: personalityLevelSchema,
   social: personalityLevelSchema,
@@ -184,7 +184,6 @@ export function mapProfileDataToUpdateRequest(
 ): UpdateProfileRequest {
   return {
     name: data.fullName,
-    university: data.university,
     phone: data.phone || "",
     schedule: mapFormValueToPersonalityLevel("sleepSchedule", data.sleepSchedule),
     social: mapFormValueToPersonalityLevel(

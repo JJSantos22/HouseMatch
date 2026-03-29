@@ -30,10 +30,22 @@ import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 const UNIVERSITIES = [
-  { name: "Universidade de Lisboa", city: "Lisboa", domain: "ulisboa.pt" },
+  {
+    name: "Instituto Superior Técnico",
+    city: "Lisboa",
+    domain: "tecnico.ulisboa.pt",
+  },
   { name: "Politécnico de Lisboa", city: "Lisboa", domain: "ipl.pt" },
-  { name: "Universidade Nova de Lisboa", city: "Lisboa", domain: "unl.pt" },
-  { name: "Universidade do Porto", city: "Porto", domain: "up.pt" },
+  {
+    name: "ISCTE - Instituto Universitário de Lisboa",
+    city: "Lisboa",
+    domain: "iscte-iul.pt",
+  },
+  {
+    name: "Faculdade de Engenharia da Universidade do Porto",
+    city: "Porto",
+    domain: "fe.up.pt",
+  },
 ];
 
 export default function SignupPage() {
@@ -118,7 +130,11 @@ export default function SignupPage() {
 
     try {
       const email = `${localPart}@${selectedUniversity.domain}`.toLowerCase();
-      await register({ email, password });
+      await register({
+        email,
+        password,
+        university: selectedUniversity.name,
+      });
       router.push("/onboarding");
     } catch {
       // Error state is handled by the auth store.

@@ -64,7 +64,6 @@ public class ProfileService {
 
         if (profile.getRole() == UserRole.student) {
             var student = studentService.get(userId);
-            studentService.update(userId, request);
             personalityTraitService.update(student.getId(), request);
             profile.setEmbedding(embeddingService.forTraitMap(personalityTraitService.getTraitMapForStudent(student.getId())));
             profileRepository.save(profile);

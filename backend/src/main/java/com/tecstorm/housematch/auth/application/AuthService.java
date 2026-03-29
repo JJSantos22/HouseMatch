@@ -43,7 +43,8 @@ public class AuthService {
         ProfileEntity saved = profileRepository.save(profile);
 
         if (request.role() == UserRole.student) {
-            StudentEntity student = studentRepository.save(new StudentEntity(saved, null));
+            String university = request.university();
+            StudentEntity student = studentRepository.save(new StudentEntity(saved, university));
             searchPreferenceRepository.save(new SearchPreferenceEntity(student));
         } else {
             landlordRepository.save(new LandlordEntity(saved, null));

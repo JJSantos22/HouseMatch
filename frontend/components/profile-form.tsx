@@ -31,7 +31,6 @@ import { toast } from "sonner";
 import {
   Loader2,
   User,
-  GraduationCap,
   Phone,
   Moon,
   Users,
@@ -203,26 +202,6 @@ export function ProfileForm({
                   value={formData.fullName}
                   onChange={(e) =>
                     handleInputChange("fullName", e.target.value)
-                  }
-                  required
-                />
-              </Field>
-
-              <Field>
-                <FieldLabel
-                  htmlFor="university"
-                  className="flex items-center gap-2"
-                >
-                  <GraduationCap className="h-4 w-4" />
-                  University
-                </FieldLabel>
-                <Input
-                  id="university"
-                  type="text"
-                  placeholder="University of Example"
-                  value={formData.university}
-                  onChange={(e) =>
-                    handleInputChange("university", e.target.value)
                   }
                   required
                 />
