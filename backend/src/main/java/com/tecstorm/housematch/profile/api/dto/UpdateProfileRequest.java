@@ -5,7 +5,6 @@ import com.tecstorm.housematch.personality.domain.PersonalityLevel;
 
 public record UpdateProfileRequest(
     @JsonProperty("name") String name,
-    @JsonProperty("university") String university,
     @JsonProperty("phone") String phone,
     @JsonProperty("schedule") PersonalityLevel schedule,
     @JsonProperty("social") PersonalityLevel social,

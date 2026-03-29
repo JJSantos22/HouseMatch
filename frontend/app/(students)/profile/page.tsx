@@ -107,6 +107,12 @@ export default function ProfilePage() {
           <h1 className="text-2xl font-bold">My Profile</h1>
           <p className="text-muted-foreground text-sm">
             Logged in as <strong>{session?.email}</strong>
+            {profileData?.university ? (
+              <>
+                {" "}
+                - <strong>{profileData.university}</strong>
+              </>
+            ) : null}
           </p>
         </div>
         <Button variant="destructive" onClick={logout}>

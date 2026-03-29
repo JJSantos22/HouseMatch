@@ -25,6 +25,7 @@ type AuthState = {
     email: string;
     password: string;
     role?: UserRole;
+    university?: string;
   }) => Promise<void>;
   login: (payload: { email: string; password: string }) => Promise<void>;
   logout: () => void;
@@ -60,11 +61,16 @@ export const useAuthStore = create<AuthState>()(
       error: null,
       setHydrated: (isHydrated) => set({ isHydrated }),
       clearError: () => set({ error: null }),
-      register: async ({ email, password, role = "student" }) => {
+      register: async ({ email, password, role = "student", university }) => {
         set({ isLoading: true, error: null });
 
         try {
-          const response = await registerUser({ email, password, role });
+          const response = await registerUser({
+            email,
+            password,
+            role,
+            university,
+          });
 
           set({
             session: {

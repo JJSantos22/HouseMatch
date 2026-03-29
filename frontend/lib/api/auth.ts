@@ -7,6 +7,7 @@ const registerRequestSchema = z.object({
   email: z.email(),
   password: z.string().min(1),
   role: userRoleSchema,
+  university: z.string().min(1).optional(),
 });
 
 const registerResponseSchema = z
