@@ -26,8 +26,7 @@ public class StudentService {
     }
 
     public void update(UUID profileId, UpdateProfileRequest request) {
-        StudentEntity student = get(profileId);
-        student.setUniversity(request.university());
-        studentRepository.save(student);
+        // University is set during registration and is no longer updated via profile endpoint.
+        get(profileId);
     }
 }

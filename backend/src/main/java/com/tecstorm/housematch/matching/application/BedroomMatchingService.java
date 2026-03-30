@@ -63,7 +63,7 @@ public class BedroomMatchingService {
             .map(bedroom -> {
                 var property = bedroom.getProperty();
                 Double distanceKm = UniversityDistanceCalculator.distanceKm(universityName, property.getLat(), property.getLng());
-                MatchResult result = compatibilityScorer.score(
+                MatchResult result = scoreWithDistanceCompatibility(
                     studentInput,
                     propertyTraitService.getMatchInput(property.getId()),
                     distanceKm
@@ -86,7 +86,20 @@ public class BedroomMatchingService {
         var studentInput = personalityTraitService.getMatchInput(studentId);
         var propertyInput = propertyTraitService.getMatchInput(propertyId);
         Double distanceKm = UniversityDistanceCalculator.distanceKm(student.getUniversity(), property.getLat(), property.getLng());
-        return toPropertyMatchResponse(property, compatibilityScorer.score(studentInput, propertyInput, distanceKm));
+        return toPropertyMatchResponse(property, scoreWithDistanceCompatibility(studentInput, propertyInput, distanceKm));
+    }
+
+    private MatchResult scoreWithDistanceCompatibility(
+        com.tecstorm.housematch.ai.MatchInput studentInput,
+        com.tecstorm.housematch.ai.MatchInput propertyInput,
+        Double distanceKm
+    ) {
+        try {
+            return compatibilityScorer.score(studentInput, propertyInput, distanceKm);
+        } catch (NoSuchMethodError ignored) {
+            // Fallback for stale runtime ai artifact that only has 2-arg score.
+            return compatibilityScorer.score(studentInput, propertyInput);
+        }
     }
 
     private BedroomMatchResponse toMatchResponse(BedroomEntity bedroom, MatchResult result) {
